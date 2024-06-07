@@ -1,0 +1,112 @@
+import { Button } from "@/components/ui/button";
+
+import { BACKEND_URL } from "@/config";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { CustomDialogForm } from "../CustomDialogForm";
+import { LabelledInput } from "../LabelledInput";
+
+export const CreateMember = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [dob, setDob] = useState<Date>(new Date());
+  const [enrollmentDate, setEnrollmentDate] = useState<Date>(new Date());
+
+  const navigate = useNavigate();
+  const { gymId } = useParams<{ gymId: string }>();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [error, setError] = useState("");
+
+  const clear = () => {
+    setName("");
+    setEmail("");
+    setContact("");
+    setIsDialogOpen(false);
+  };
+
+  async function handleSubmit() {
+    try {
+      const submit = await fetch(`${BACKEND_URL}/api/v1/admin/${gymId}/users`, {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          contact,
+          dob,
+          enrollmentDate,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          authorization: localStorage.getItem("token") ?? "",
+        },
+      });
+      if (!submit.ok) {
+        throw new Error("Failed to create batch");
+      }
+
+      console.log("Member created successfully");
+      clear();
+      navigate(`/gym/${gymId}/menu`);
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else setError("An unexpected error occurred");
+    }
+  }
+  return (
+    <div>
+      <CustomDialogForm
+        isOpen={isDialogOpen}
+        setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
+        FormTitle="Add new Member"
+        FormDescription=" Please add all the necessary fields and click save"
+        titleButton="Create Member"
+        children={
+          <div>
+            <LabelledInput
+              autoComplete="name"
+              label="Name"
+              placeholder="Full Name"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <LabelledInput
+              autoComplete="email"
+              label="Email"
+              placeholder="@gmail.com"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <LabelledInput
+              autoComplete="phone"
+              label="Contact"
+              placeholder="Contact Number"
+              onChange={(e) => setContact(e.target.value)}
+            />
+            <LabelledInput
+              label="Birth Date"
+              placeholder={"Enter Date"}
+              selectedDate={dob}
+              pickDate={(date) => setDob(date)}
+              type="Calendar"
+            />
+
+            <LabelledInput
+              label="Enrollment Date"
+              placeholder="Date of joining"
+              selectedDate={enrollmentDate}
+              pickDate={(date) => setEnrollmentDate(date)}
+              type="Calendar"
+            />
+          </div>
+        }
+        button={
+          <Button type="submit" onClick={handleSubmit} variant={"outline"}>
+            Save changes
+          </Button>
+        }
+      />
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+    </div>
+  );
+};
