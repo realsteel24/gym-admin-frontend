@@ -1,7 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Master } from "./pages/Master";
 import { Gym } from "./pages/tables/Gym";
 import { Programs } from "./pages/tables/Programs";
 import { Layout } from "./components/Layout";
@@ -51,7 +50,6 @@ function App() {
 
           <Route path="/payment" element={<Batches />} />
 
-          <Route path="/create" element={<Master />} />
           <Route path="/test" element={<SignIn />} />
         </Routes>
       </BrowserRouter>
