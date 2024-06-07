@@ -40,7 +40,7 @@ export const Programs = () => {
                 </tr>
               </thead>
               <tbody>
-                {programs.length > 0 ? (
+                {programs && programs.length > 0 ? (
                   programs.map((item) => (
                     <tr key={item.id} className="bg-white border dark:bg-black">
                       <td className="px-6 py-3">{item.name}</td>

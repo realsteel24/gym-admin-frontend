@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-
 import { BACKEND_URL } from "@/config";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
-
 import {
   FeeOptions,
   MemberOptions,
@@ -13,6 +11,7 @@ import {
   useMembers,
 } from "@/hooks";
 import { Label } from "../ui/label";
+
 type Frequency =
   | "monthly"
   | "quarterly"
@@ -31,7 +30,6 @@ export const CreateMemberFee = () => {
   });
 
   const [feeCategoriesList, setFeeCategoriesList] = useState<FeeOptions[]>([]);
-
   const [memberId, setMemberId] = useState("");
   const [feeCategoryId, setFeeCategoryId] = useState("");
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -39,7 +37,7 @@ export const CreateMemberFee = () => {
   const [paidDate, setPaidDate] = useState<Date>(new Date());
   const [dueDate, setDueDate] = useState<Date>(addMonths(new Date(), 1));
   const [remarks, setRemarks] = useState("Success");
-  const [MemberList, setMemberList] = useState<MemberOptions[]>([]);
+  const [memberList, setMemberList] = useState<MemberOptions[]>([]);
   const { members, loading, dummy, render } = useMembers({ gymId: gymId! });
 
   const clear = () => {
@@ -50,17 +48,18 @@ export const CreateMemberFee = () => {
     setIsDialogOpen(false);
     setError("");
   };
-  useEffect(() => {
-    if (!loading) {
-      setMemberList(members);
-    }
-  }, [members, dummy]);
 
   useEffect(() => {
-    if (!feeCategoryLoading) {
+    if (!loading && members) {
+      setMemberList(members);
+    }
+  }, [loading, members, dummy]);
+
+  useEffect(() => {
+    if (!feeCategoryLoading && feeCategories) {
       setFeeCategoriesList(feeCategories);
     }
-  }, [feeCategories]);
+  }, [feeCategoryLoading, feeCategories]);
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategoryId = e.target.value;
@@ -117,9 +116,12 @@ export const CreateMemberFee = () => {
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
-      } else setError("An unexpected error occurred");
+      } else {
+        setError("An unexpected error occurred");
+      }
     }
   }
+
   return (
     <div>
       <CustomDialogForm
@@ -127,7 +129,7 @@ export const CreateMemberFee = () => {
         isOpen={isDialogOpen}
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Record a Payment"
-        FormDescription=" Please add all the necessary fields and click save"
+        FormDescription="Please add all the necessary fields and click save"
         titleButton="Create Member"
         children={
           <div>
@@ -138,14 +140,12 @@ export const CreateMemberFee = () => {
               <select
                 id="member"
                 value={memberId}
-                onChange={(e) => {
-                  setMemberId(e.target.value);
-                }}
+                onChange={(e) => setMemberId(e.target.value)}
                 className="col-span-3 dark:bg-black"
               >
                 <option value="">Choose Member</option>
-                {MemberList.map((member) => (
-                  <option key={member.id} value={member.Members[0].id}>
+                {memberList.map((member) => (
+                  <option key={member.id} value={member.id}>
                     {member.name}
                   </option>
                 ))}

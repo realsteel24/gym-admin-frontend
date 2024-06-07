@@ -46,7 +46,7 @@ export const FeeCategories = () => {
                 </tr>
               </thead>
               <tbody key={counter}>
-                {feeCategories.length > 0 ? (
+                {feeCategories && feeCategories.length > 0 ? (
                   feeCategories.map((item) => (
                     <tr
                       key={item.id}

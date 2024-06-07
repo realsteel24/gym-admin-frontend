@@ -136,7 +136,11 @@ export const useGyms = () => {
   const [gyms, setGyms] = useState<GymOptions[]>([]);
   useEffect(() => {
     try {
-      fetch(`${BACKEND_URL}/api/v1/gym/gyms`).then(async (response) => {
+      fetch(`${BACKEND_URL}/api/v1/gym/gyms`, {
+        headers: {
+          authorization: localStorage.getItem("token") ?? "",
+        },
+      }).then(async (response) => {
         if (!response.ok) {
           throw new Error("Something went wrong");
         }

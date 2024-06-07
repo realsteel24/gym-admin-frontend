@@ -8,7 +8,9 @@ export const Gym = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="flex justify-center text-xl my-6 underline underline-offset-8 decoration-4 decoration-accent font-semibold">Business Units</div>
+      <div className="flex justify-center text-xl my-6 underline underline-offset-8 decoration-4 decoration-accent font-semibold">
+        Business Units
+      </div>
       <div>
         {loading ? (
           <div className="md:mx-8">
@@ -41,7 +43,7 @@ export const Gym = () => {
                 </tr>
               </thead>
               <tbody>
-                {gyms.length > 0 ? (
+                {gyms && gyms.length > 0 ? (
                   gyms.map((item) => (
                     <tr
                       key={item.id}

@@ -54,7 +54,7 @@ export const Members = () => {
                 </tr>
               </thead>
               <tbody>
-                {members.length > 0 ? (
+                {members && members.length > 0 ? (
                   members.map((item) => (
                     <tr
                       key={item.id}

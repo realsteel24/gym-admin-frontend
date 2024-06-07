@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-
 import { Label } from "@/components/ui/label";
 import { BACKEND_URL } from "@/config";
 import {
@@ -26,7 +25,7 @@ export const CreateMemberProgram = () => {
   const [endDate, setEndDate] = useState(addMonths(new Date(), 1));
   const [batchId, setBatchId] = useState("");
   const [batchList, setBatchList] = useState<BatchOptions[]>([]);
-  const [MemberList, setMemberList] = useState<MemberOptions[]>([]);
+  const [memberList, setMemberList] = useState<MemberOptions[]>([]);
   const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
   const navigate = useNavigate();
 
@@ -34,32 +33,34 @@ export const CreateMemberProgram = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && members) {
       setMemberList(members);
     }
-  }, [members, dummy]);
+  }, [loading, members, dummy]);
 
   useEffect(() => {
-    if (!programLoading) {
+    if (!programLoading && programs) {
       setProgramsList(programs);
     }
-  }, [loading, programs]);
+  }, [programLoading, programs]);
 
   useEffect(() => {
-    setBatchList(batches);
+    if (batches) {
+      setBatchList(batches);
+    }
   }, [batches]);
 
   const clear = () => {
     setProgramId("");
     setBatchId("");
+    setMemberId("");
     setError("");
-
     setIsDialogOpen(false);
   };
 
   async function handleSubmit() {
     try {
-      const submit = await fetch(
+      const response = await fetch(
         `${BACKEND_URL}/api/v1/admin/${gymId}/memberPrograms`,
         {
           method: "POST",
@@ -76,29 +77,30 @@ export const CreateMemberProgram = () => {
           },
         }
       );
-      if (!submit.ok) {
-        throw new Error("Failed to create batch");
+      if (!response.ok) {
+        throw new Error("Failed to create member program");
       }
 
-      console.log("Member successfully added to program ");
+      console.log("Member successfully added to program");
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
-      } else setError("An unexpected error occurred");
+      } else {
+        setError("An unexpected error occurred");
+      }
     }
   }
+
   return (
     <div>
       <CustomDialogForm
         fn={() => render((prev) => prev + 1)}
         isOpen={isDialogOpen}
-        setIsOpen={() => {
-          setIsDialogOpen(!isDialogOpen);
-        }}
+        setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Add Member to Program"
-        FormDescription=" Please add all the necessary fields and click save"
+        FormDescription="Please add all the necessary fields and click save"
         titleButton="Add Member"
         children={
           <div>
@@ -147,13 +149,11 @@ export const CreateMemberProgram = () => {
               <select
                 id="member"
                 value={memberId}
-                onChange={(e) => {
-                  setMemberId(e.target.value);
-                }}
+                onChange={(e) => setMemberId(e.target.value)}
                 className="col-span-3 dark:bg-black"
               >
                 <option value="">Choose Member</option>
-                {MemberList.map((member) => (
+                {memberList.map((member) => (
                   <option key={member.id} value={member.Members[0].id}>
                     {member.name}
                   </option>

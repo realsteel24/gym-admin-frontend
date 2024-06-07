@@ -50,7 +50,7 @@ export const Batches = () => {
                 </tr>
               </thead>
               <tbody>
-                {batches.length > 0 ? (
+                {batches && batches.length > 0 ? (
                   batches.map((item) => (
                     <tr
                       key={item.id}
