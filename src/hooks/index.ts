@@ -7,22 +7,17 @@ export interface MemberOptions {
   email: string;
   dob: string;
   contact: string;
-  enrollmentDate: string;
   Members: {
-    0: {
-      id: string;
-      enrollmentDate: string;
-      gymId: string;
-      MemberPrograms: {
-        0: {
-          Program: { name: string };
-          programId: string;
-          batchId: string;
-          Batch: { name: string };
-        };
-      };
-    };
-  };
+    id: string;
+    enrollmentDate: string;
+    gymId: string;
+    MemberPrograms: {
+      Program: { name: string };
+      programId: string;
+      batchId: string;
+      Batch: { name: string };
+    }[];
+  }[];
 }
 
 export interface GymOptions {
@@ -112,7 +107,7 @@ export const useMembers = ({ gymId }: { gymId: string }) => {
           throw new Error("Something went wrong");
         }
         const result = await response.json();
-        setMembers(result.member);
+        setMembers(result.data);
       } catch (error) {
         console.error("Error fetching members:", error);
       } finally {
