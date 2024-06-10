@@ -9,7 +9,7 @@ export function FeeCategoryCard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 gap-y-4 mx-6 my-6">
       <CardMenu
-        cardTitle="Create Fee Category"
+        cardTitle="Create Package"
         type="elementCard"
         children={<CreateFeeCategory />}
       />

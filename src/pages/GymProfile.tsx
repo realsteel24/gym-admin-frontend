@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export function GymProfile() {
-  const [activeComponent, setActiveComponent] = useState("MemberCard");
+  const [activeComponent, setActiveComponent] = useState("Member");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const renderComponent = () => {
     switch (activeComponent) {
@@ -43,6 +43,7 @@ export function GymProfile() {
       <div className="flex justify-center text-2xl py-4 underline underline-offset-8 decoration-4 decoration-accent font-semibold">
         Mohan's Planet
       </div>
+
       <div className=" lg:hidden block ">
         <div className="flex justify-center mt-2">
           <Button

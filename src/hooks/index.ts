@@ -5,7 +5,7 @@ export interface MemberOptions {
   id: string;
   name: string;
   email: string;
-  dob: string;
+  dob: string | null;
   contact: string;
   Members: {
     id: string;
@@ -18,6 +18,7 @@ export interface MemberOptions {
       Batch: { name: string };
     }[];
   }[];
+  navigate: (path: string) => void;
 }
 
 export interface GymOptions {
@@ -27,6 +28,7 @@ export interface GymOptions {
   address: string;
   website: string;
   operationalHours: string;
+  navigate: (path: string) => void;
 }
 
 export interface ProgramsOptions {
@@ -51,6 +53,7 @@ export interface BatchOptions {
     name: string;
   };
   MemberPrograms: { Member: { User: { name: string } } };
+  navigate: (path: string) => void;
 }
 
 export interface FeeOptions {
