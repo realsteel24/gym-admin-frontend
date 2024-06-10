@@ -11,6 +11,7 @@ import {
   useMembers,
 } from "@/hooks";
 import { Label } from "../ui/label";
+import Select from "react-select";
 
 type Frequency =
   | "monthly"
@@ -121,6 +122,14 @@ export const CreateMemberFee = () => {
       }
     }
   }
+  const memberOptions = memberList.map((member) => ({
+    value: member.Members[0].id,
+    label: member.name,
+  }));
+
+  const handleMemberChange = (selectedOption: any) => {
+    setMemberId(selectedOption ? selectedOption.value : "");
+  };
 
   return (
     <div>
@@ -137,19 +146,16 @@ export const CreateMemberFee = () => {
               <Label htmlFor="member" className="text-right">
                 Member
               </Label>
-              <select
+              <Select
                 id="member"
-                value={memberId}
-                onChange={(e) => setMemberId(e.target.value)}
-                className="col-span-3 dark:bg-black"
-              >
-                <option value="">Choose Member</option>
-                {memberList.map((member) => (
-                  <option key={member.id} value={member.Members[0].id}>
-                    {member.name}
-                  </option>
-                ))}
-              </select>
+                value={memberOptions.find(
+                  (option) => option.value === memberId
+                )}
+                onChange={handleMemberChange}
+                options={memberOptions}
+                className="col-span-3"
+                classNamePrefix="react-select"
+              />
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4 pt-2">

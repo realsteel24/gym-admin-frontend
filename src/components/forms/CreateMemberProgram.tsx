@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { BACKEND_URL } from "@/config";
@@ -9,10 +10,10 @@ import {
   useMembers,
   usePrograms,
 } from "@/hooks";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
+import Select from "react-select";
 
 export const CreateMemberProgram = () => {
   const { gymId } = useParams<{ gymId: string }>();
@@ -28,7 +29,6 @@ export const CreateMemberProgram = () => {
   const [memberList, setMemberList] = useState<MemberOptions[]>([]);
   const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
   const navigate = useNavigate();
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
 
@@ -93,6 +93,15 @@ export const CreateMemberProgram = () => {
     }
   }
 
+  const memberOptions = memberList.map((member) => ({
+    value: member.Members[0].id,
+    label: member.name,
+  }));
+
+  const handleMemberChange = (selectedOption: any) => {
+    setMemberId(selectedOption ? selectedOption.value : "");
+  };
+
   return (
     <div>
       <CustomDialogForm
@@ -146,19 +155,16 @@ export const CreateMemberProgram = () => {
               <Label htmlFor="member" className="text-right">
                 Select Member
               </Label>
-              <select
+              <Select
                 id="member"
-                value={memberId}
-                onChange={(e) => setMemberId(e.target.value)}
-                className="col-span-3 dark:bg-black"
-              >
-                <option value="">Choose Member</option>
-                {memberList.map((member) => (
-                  <option key={member.id} value={member.Members[0].id}>
-                    {member.name}
-                  </option>
-                ))}
-              </select>
+                value={memberOptions.find(
+                  (option) => option.value === memberId
+                )}
+                onChange={handleMemberChange}
+                options={memberOptions}
+                className="col-span-3"
+                classNamePrefix="react-select"
+              />
             </div>
             <LabelledInput
               label="Start Date"
