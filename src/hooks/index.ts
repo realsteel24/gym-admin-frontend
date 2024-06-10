@@ -88,6 +88,24 @@ export interface MemberProgramOptions {
   Program: { 0: { name: string } };
 }
 
+export interface MemberFeeOptions {
+  id: string;
+  paidDate: string;
+  dueDate: string;
+  status: string;
+  FeeCategory: { description: true; frequency: true };
+  Payments: { 0: { amount: true } };
+  Member: {
+    User: { name: string; contact: string };
+    MemberPrograms: {
+      0: {
+        Batch: { name: true };
+        Program: { name: true };
+      };
+    };
+  };
+}
+
 export const useMembers = ({ gymId }: { gymId: string }) => {
   const [loading, setLoading] = useState(true);
   const [dummy, render] = useState(0);
@@ -170,7 +188,7 @@ export const usePrograms = ({ gymId }: { gymId: string }) => {
     } catch (error) {
       console.log(`Error: ${error}`);
     }
-  }, []);
+  }, [gymId]);
   return {
     programs,
     programLoading,
@@ -242,7 +260,7 @@ export const useFeeCategories = ({ gymId }: { gymId: string }) => {
     };
 
     fetchCategories();
-  }, []);
+  }, [gymId]);
 
   return {
     feeCategories,
@@ -250,6 +268,7 @@ export const useFeeCategories = ({ gymId }: { gymId: string }) => {
   };
 };
 
+//Backend query disabled
 export const useMemberPrograms = ({ gymId }: { gymId: string }) => {
   const [memberProgramLoading, setMemberProgramLoading] = useState(true);
   const [memberPrograms, setMemberPrograms] = useState<MemberProgramOptions[]>(
@@ -278,11 +297,46 @@ export const useMemberPrograms = ({ gymId }: { gymId: string }) => {
     };
 
     fetchMemberPrograms();
-  }, []);
+  }, [gymId]);
 
   return {
     memberPrograms,
     memberProgramLoading,
+  };
+};
+
+export const useMemberFees = ({ gymId }: { gymId: string }) => {
+  const [memberFeesLoading, setMemberFeesLoading] = useState(true);
+  const [memberFees, setMemberFees] = useState<MemberFeeOptions[]>([]);
+
+  useEffect(() => {
+    const fetchMemberFees = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/api/v1/admin/${gymId}/memberFees`,
+          {
+            headers: { authorization: localStorage.getItem("token") ?? "" },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const result = await response.json();
+        setMemberFees(result.memberFees);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      } finally {
+        setMemberFeesLoading(false);
+      }
+    };
+
+    fetchMemberFees();
+  }, [gymId]);
+
+  return {
+    memberFees,
+    memberFeesLoading,
   };
 };
 

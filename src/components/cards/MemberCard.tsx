@@ -4,6 +4,7 @@ import { ViewMembers } from "@/pages/tables/Members";
 import { CardMenu } from "../CardMenu";
 import { CreateMemberProgram } from "../forms/CreateMemberProgram";
 import { CreateMemberFee } from "../forms/CreateMemberFee";
+import { ViewMemberFees } from "@/pages/tables/MemberFees";
 
 export function MemberCard() {
   const { gymId } = useParams<{ gymId: string }>();
@@ -35,7 +36,7 @@ export function MemberCard() {
       <CardMenu
         cardTitle="Manage Members Fees"
         type="buttonedCard"
-        cardFunction={() => ViewMembers(gymId ?? "", navigate)}
+        cardFunction={() => ViewMemberFees(gymId ?? "", navigate)}
         buttonTitle="View Fee Collection"
       />
     </div>

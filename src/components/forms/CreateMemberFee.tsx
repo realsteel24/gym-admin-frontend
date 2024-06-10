@@ -130,7 +130,7 @@ export const CreateMemberFee = () => {
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Record a Payment"
         FormDescription="Please add all the necessary fields and click save"
-        titleButton="Create Member"
+        titleButton="Add transaction"
         children={
           <div>
             <div className="grid grid-cols-4 items-center gap-4 pt-2">
@@ -145,7 +145,7 @@ export const CreateMemberFee = () => {
               >
                 <option value="">Choose Member</option>
                 {memberList.map((member) => (
-                  <option key={member.id} value={member.id}>
+                  <option key={member.id} value={member.Members[0].id}>
                     {member.name}
                   </option>
                 ))}

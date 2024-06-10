@@ -9,6 +9,7 @@ import { GymProfile } from "./pages/GymProfile";
 import { SignIn } from "./components/forms/SignIn";
 import { FeeCategories } from "./pages/tables/FeeCategories";
 import { Members } from "./pages/tables/Members";
+import { MemberFees } from "./pages/tables/MemberFees";
 
 function App() {
   return (
@@ -44,6 +45,10 @@ function App() {
           <Route
             path="/gym/:gymId/members"
             element={<Layout children={<Members />} />}
+          />
+          <Route
+            path="/gym/:gymId/memberFees"
+            element={<Layout children={<MemberFees />} />}
           />
 
           <Route path="/signin" element={<SignIn />} />
