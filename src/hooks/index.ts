@@ -8,16 +8,20 @@ export interface MemberOptions {
   dob: string | null;
   contact: string;
   Members: {
-    id: string;
-    enrollmentDate: string;
-    gymId: string;
-    MemberPrograms: {
-      Program: { name: string };
-      programId: string;
-      batchId: string;
-      Batch: { name: string };
-    }[];
-  }[];
+    0: {
+      id: string;
+      enrollmentDate: string;
+      gymId: string;
+      MemberPrograms: {
+        0: {
+          Program: { name: string };
+          programId: string;
+          batchId: string;
+          Batch: { name: string };
+        };
+      };
+    };
+  };
   navigate: (path: string) => void;
 }
 

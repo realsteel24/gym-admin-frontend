@@ -27,14 +27,14 @@ export const CustomDialogForm = ({
   button: React.ReactNode;
   titleButton: React.ReactNode;
   isOpen: boolean;
-  fn?: ()=> void;
+  fn?: () => void;
   setIsOpen: () => void;
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button onClick={ fn} variant={"outline"}>
-          {titleButton}{" "}
+        <Button onClick={fn} variant={"outline"}>
+          {titleButton}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

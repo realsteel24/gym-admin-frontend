@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput } from "../LabelledInput";
+import { useToast } from "../ui/use-toast";
 
 export const CreateMember = () => {
   const [name, setName] = useState("");
@@ -18,6 +19,7 @@ export const CreateMember = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
+  const { toast } = useToast();
 
   const clear = () => {
     setName("");
@@ -47,6 +49,10 @@ export const CreateMember = () => {
       }
 
       console.log("Member created successfully");
+      toast({
+        title: "Member successfully created",
+        description: "Success",
+      });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {

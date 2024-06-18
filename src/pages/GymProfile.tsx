@@ -5,6 +5,7 @@ import { MemberCard } from "@/components/cards/MemberCard";
 import { PaymentCard } from "@/components/cards/PaymentCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
 import { useState } from "react";
 
 export function GymProfile() {
@@ -181,7 +182,7 @@ export function GymProfile() {
           </Button>
         </div>
       </div>
-
+      <Toaster />
       <div>{renderComponent()}</div>
     </div>
   );

@@ -12,6 +12,7 @@ import {
 } from "@/hooks";
 import { Label } from "../ui/label";
 import Select from "react-select";
+import { useToast } from "../ui/use-toast";
 
 type Frequency =
   | "monthly"
@@ -40,6 +41,7 @@ export const CreateMemberFee = () => {
   const [remarks, setRemarks] = useState("Success");
   const [memberList, setMemberList] = useState<MemberOptions[]>([]);
   const { members, loading, dummy, render } = useMembers({ gymId: gymId! });
+  const { toast } = useToast();
 
   const clear = () => {
     setMemberId("");
@@ -112,6 +114,10 @@ export const CreateMemberFee = () => {
       }
 
       console.log("Member created successfully");
+      toast({
+        title: "Payment recorded successfully",
+        description: "Success",
+      });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {
@@ -123,7 +129,7 @@ export const CreateMemberFee = () => {
     }
   }
   const memberOptions = memberList.map((member) => ({
-    value: member.Members[0].id,
+    value: member.id,
     label: member.name,
   }));
 
@@ -153,8 +159,8 @@ export const CreateMemberFee = () => {
                 )}
                 onChange={handleMemberChange}
                 options={memberOptions}
-                className="col-span-3"
-                classNamePrefix="react-select"
+                className="col-span-3 dark:bg-black"
+                classNamePrefix="react-select  dark:bg-black"
               />
             </div>
 

@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
 import Select from "react-select";
+import { useToast } from "../ui/use-toast";
 
 export const CreateMemberProgram = () => {
   const { gymId } = useParams<{ gymId: string }>();
@@ -23,7 +24,7 @@ export const CreateMemberProgram = () => {
   const { batches } = useBatches({ gymId: gymId!, id: programId });
   const { members, loading, dummy, render } = useMembers({ gymId: gymId! });
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addMonths(new Date(), 1));
+  const [endDate, setEndDate] = useState(addMonths(new Date(), 36));
   const [batchId, setBatchId] = useState("");
   const [batchList, setBatchList] = useState<BatchOptions[]>([]);
   const [memberList, setMemberList] = useState<MemberOptions[]>([]);
@@ -31,6 +32,7 @@ export const CreateMemberProgram = () => {
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!loading && members) {
@@ -82,6 +84,10 @@ export const CreateMemberProgram = () => {
       }
 
       console.log("Member successfully added to program");
+      toast({
+        title: "Member successfully added to program",
+        description: "Success",
+      });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {
@@ -93,10 +99,13 @@ export const CreateMemberProgram = () => {
     }
   }
 
-  const memberOptions = memberList.map((member) => ({
+  const memberOptions = memberList
+  .filter((member) => Array.isArray(member.Members) && member.Members.length > 0)
+  .map((member) => ({
     value: member.Members[0].id,
     label: member.name,
   }));
+
 
   const handleMemberChange = (selectedOption: any) => {
     setMemberId(selectedOption ? selectedOption.value : "");

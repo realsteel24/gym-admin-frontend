@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput } from "../LabelledInput";
 import { Label } from "../ui/label";
+import { useToast } from "../ui/use-toast";
 
 enum PaymentFrequency {
   Monthly = "Monthly",
@@ -17,11 +18,11 @@ enum PaymentFrequency {
 
 export const CreateFeeCategory = () => {
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("1500");
+  const [amount, setAmount] = useState(1500);
   const [frequency, setFrequency] = useState<PaymentFrequency>(
     PaymentFrequency.Monthly
   );
-
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { gymId } = useParams<{ gymId: string }>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -40,7 +41,7 @@ export const CreateFeeCategory = () => {
 
   const clear = () => {
     setDescription("");
-    setAmount("");
+    setAmount(0);
     setError("");
     setIsDialogOpen(false);
   };
@@ -67,6 +68,10 @@ export const CreateFeeCategory = () => {
       }
 
       console.log("Fee category created successfully");
+      toast({
+        title: "Package successfully created",
+        description: "Success",
+      });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {
@@ -80,9 +85,9 @@ export const CreateFeeCategory = () => {
       <CustomDialogForm
         isOpen={isDialogOpen}
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
-        FormTitle="Create Fee Category"
+        FormTitle="Create Fee Package"
         FormDescription=" Please add all the necessary fields and click save"
-        titleButton="Create Fee Category"
+        titleButton="Create Fee Package"
         children={
           <div>
             <LabelledInput
@@ -94,7 +99,7 @@ export const CreateFeeCategory = () => {
               label="Amount"
               placeholder="Amount"
               defaultValue="1500"
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => setAmount(parseInt(e.target.value))}
             />
 
             <div className="grid grid-cols-4 items-center gap-4 pt-2">

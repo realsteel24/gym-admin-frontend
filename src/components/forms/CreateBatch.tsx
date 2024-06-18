@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput } from "../LabelledInput";
+import { useToast } from "../ui/use-toast";
 
 export const CreateBatch = () => {
   const [name, setName] = useState("");
@@ -20,6 +21,7 @@ export const CreateBatch = () => {
   const { programLoading, programs } = usePrograms({ gymId: gymId! });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!programLoading) {
@@ -59,6 +61,10 @@ export const CreateBatch = () => {
       }
 
       console.log("Batch created successfully");
+      toast({
+        title: "Batch successfully created",
+        description: "Success",
+      });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {

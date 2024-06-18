@@ -27,10 +27,13 @@ export const MemberColumns: ColumnDef<MemberOptions>[] = [
   {
     accessorKey: "enrollmentDate",
     header: "Enrollment Date",
-    cell: ({ row }) =>
-      row.original.Members[0].enrollmentDate
+    cell: ({ row }) => {
+      const enrollmentDate =
+        row.original.Members && row.original.Members[0]?.enrollmentDate;
+      return enrollmentDate
         ? dateFormat(row.original.Members[0].enrollmentDate, "dd/mm/yyyy")
-        : "N/A",
+        : "N/A";
+    },
   },
   {
     accessorKey: "dob",

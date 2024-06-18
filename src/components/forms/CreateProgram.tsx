@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput } from "../LabelledInput";
+import { useToast } from "../ui/use-toast";
 
 export const CreateProgram = () => {
   const [name, setName] = useState("Kickboxing");
@@ -13,6 +14,7 @@ export const CreateProgram = () => {
   const [error, setError] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { gymId } = useParams<{ gymId: string }>();
   const clear = () => {
@@ -47,7 +49,10 @@ export const CreateProgram = () => {
 
       const res = await response.json();
       console.log(res);
-
+      toast({
+        title: "Program successfully created",
+        description: "Success",
+      });
       navigate(`/gym/${gymId}/menu`);
       clear();
     } catch (e) {
