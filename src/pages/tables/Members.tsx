@@ -5,9 +5,10 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { MemberColumns } from "./columns/MemberColumns";
 
 export const Members = () => {
-  const { gymId } = useParams<{ gymId: string }>();
+  const { gymId, id } = useParams<{ gymId: string; id: string }>();
   const { members, loading } = useMembers({
     gymId: gymId!,
+    id: id ?? "all",
   });
   const navigate = useNavigate();
 
@@ -63,6 +64,10 @@ export const Members = () => {
   );
 };
 
-export const ViewMembers = (gymId: string, navigate: NavigateFunction) => {
-  navigate(`/gym/${gymId}/members`);
+export const ViewMembers = (
+  id: string,
+  gymId: string,
+  navigate: NavigateFunction
+) => {
+  navigate(`/gym/${gymId}/members/${id}`);
 };

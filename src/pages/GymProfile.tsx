@@ -6,9 +6,9 @@ import { PaymentCard } from "@/components/cards/PaymentCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
-import { useState } from "react";
+import React, { useState } from "react";
 
-export function GymProfile() {
+export function GymProfile({ children }: { children?: React.ReactNode }) {
   const [activeComponent, setActiveComponent] = useState("Member");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const renderComponent = () => {
@@ -183,7 +183,10 @@ export function GymProfile() {
         </div>
       </div>
       <Toaster />
-      <div>{renderComponent()}</div>
+      <div>
+        {renderComponent()}
+        {children}
+      </div>
     </div>
   );
 }

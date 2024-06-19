@@ -10,6 +10,7 @@ import { SignIn } from "./components/forms/SignIn";
 import { FeeCategories } from "./pages/tables/FeeCategories";
 import { Members } from "./pages/tables/Members";
 import { MemberFees } from "./pages/tables/MemberFees";
+import { Dashboard } from "./pages/Dashboard";
 
 function App() {
   return (
@@ -25,13 +26,15 @@ function App() {
 
           <Route
             path="/gym/:gymId/programs"
-            element={<Layout children={<Programs />} />}
+            element={
+              <Layout children={<GymProfile children={<Programs />} />} />
+            }
           />
 
           {/* This will come later */}
           <Route
-            path="/gym/programs"
-            element={<Layout children={<Programs />} />}
+            path="/gym/dashboard"
+            element={<Layout children={<Dashboard />} />}
           />
 
           <Route
@@ -43,7 +46,7 @@ function App() {
             element={<Layout children={<FeeCategories />} />}
           />
           <Route
-            path="/gym/:gymId/members"
+            path="/gym/:gymId/members/:id"
             element={<Layout children={<Members />} />}
           />
           <Route

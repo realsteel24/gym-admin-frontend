@@ -7,7 +7,7 @@ import { CreateMemberFee } from "../forms/CreateMemberFee";
 import { ViewMemberFees } from "@/pages/tables/MemberFees";
 
 export function MemberCard() {
-  const { gymId } = useParams<{ gymId: string }>();
+  const { gymId, id } = useParams<{ gymId: string; id: string }>();
   const navigate = useNavigate();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 gap-y-4 mx-6 my-6">
@@ -30,7 +30,7 @@ export function MemberCard() {
       <CardMenu
         cardTitle="Manage Members"
         type="buttonedCard"
-        cardFunction={() => ViewMembers(gymId ?? "", navigate)}
+        cardFunction={() => ViewMembers(id ?? "all", gymId ?? "", navigate)}
         buttonTitle="View Members"
       />
       <CardMenu

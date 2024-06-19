@@ -8,6 +8,7 @@ export const Batches = () => {
   const { id, gymId } = useParams<{ id: string; gymId: string }>();
   const { batches, loading } = useBatches({ id: id ?? "all", gymId: gymId! });
   const navigate = useNavigate();
+  const columns = BatchColumns(navigate, gymId!);
 
   return (
     <div>
@@ -38,7 +39,7 @@ export const Batches = () => {
       ) : (
         <div>
           <div className="relative overflow-x-auto border rounded-xl md:mx-8">
-            <DataTable columns={BatchColumns} data={batches} />
+            <DataTable columns={columns} data={batches} />
           </div>
         </div>
       )}

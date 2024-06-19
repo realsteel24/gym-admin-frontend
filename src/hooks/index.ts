@@ -113,7 +113,7 @@ export interface MemberFeeOptions {
   };
 }
 
-export const useMembers = ({ gymId }: { gymId: string }) => {
+export const useMembers = ({ gymId, id }: { gymId: string; id: string }) => {
   const [loading, setLoading] = useState(true);
   const [dummy, render] = useState(0);
   const [members, setMembers] = useState<MemberOptions[]>([]);
@@ -123,7 +123,7 @@ export const useMembers = ({ gymId }: { gymId: string }) => {
     const fetchMembers = async () => {
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/${gymId}/members`,
+          `${BACKEND_URL}/api/v1/admin/${gymId}/members/${id}`,
           {
             headers: { authorization: localStorage.getItem("token") ?? "" },
           }

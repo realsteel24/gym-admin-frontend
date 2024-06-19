@@ -11,7 +11,7 @@ export function Layout({
   children,
 }: {
   children: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div className="">
       <Appbar
@@ -26,9 +26,9 @@ export function Layout({
           <div>
             <SidebarItem href={"/gym"} icon={<HomeIcon />} title="Home" />
             <SidebarItem
-              href={"/gym/programs"}
+              href={"/gym/dashboard"}
               icon={<TransferIcon />}
-              title="Programs"
+              title="Dashboard"
             />
             <SidebarItem
               href={"/payment"}

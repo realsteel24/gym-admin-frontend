@@ -22,7 +22,10 @@ export const CreateMemberProgram = () => {
   const [memberId, setMemberId] = useState("");
   const { programLoading, programs } = usePrograms({ gymId: gymId! });
   const { batches } = useBatches({ gymId: gymId!, id: programId });
-  const { members, loading, dummy, render } = useMembers({ gymId: gymId! });
+  const { members, loading, dummy, render } = useMembers({
+    gymId: gymId!,
+    id: "all",
+  });
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addMonths(new Date(), 36));
   const [batchId, setBatchId] = useState("");
@@ -100,12 +103,13 @@ export const CreateMemberProgram = () => {
   }
 
   const memberOptions = memberList
-  .filter((member) => Array.isArray(member.Members) && member.Members.length > 0)
-  .map((member) => ({
-    value: member.Members[0].id,
-    label: member.name,
-  }));
-
+    .filter(
+      (member) => Array.isArray(member.Members) && member.Members.length > 0
+    )
+    .map((member) => ({
+      value: member.Members[0].id,
+      label: member.name,
+    }));
 
   const handleMemberChange = (selectedOption: any) => {
     setMemberId(selectedOption ? selectedOption.value : "");

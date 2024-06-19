@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { BatchOptions } from "@/hooks";
 import { ColumnDef } from "@tanstack/react-table";
+import { NavigateFunction } from "react-router-dom";
+import { ViewMembers } from "../Members";
 
-export const BatchColumns: ColumnDef<BatchOptions>[] = [
+export const BatchColumns = (
+  navigate: NavigateFunction,
+  gymId: string
+): ColumnDef<BatchOptions>[] => [
   {
-    accessorKey: "Program.name",
+    accessorFn: (row) => row.Program?.name,
     header: "Program Name",
   },
   {
@@ -12,7 +17,7 @@ export const BatchColumns: ColumnDef<BatchOptions>[] = [
     header: "Batch Name",
   },
   {
-    accessorKey: "_count.MemberPrograms",
+    accessorFn: (row) => row._count?.MemberPrograms,
     header: "Member Count",
   },
   {
@@ -32,7 +37,7 @@ export const BatchColumns: ColumnDef<BatchOptions>[] = [
     cell: ({ row }) => (
       <Button
         variant={"outline"}
-        onClick={() => row.original.navigate(`/gym/${row.original.id}/menu`)}
+        onClick={() => ViewMembers(row.original.id, gymId, navigate)}
         size={"sm"}
       >
         View Members

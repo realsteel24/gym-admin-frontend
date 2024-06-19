@@ -40,7 +40,10 @@ export const CreateMemberFee = () => {
   const [dueDate, setDueDate] = useState<Date>(addMonths(new Date(), 1));
   const [remarks, setRemarks] = useState("Success");
   const [memberList, setMemberList] = useState<MemberOptions[]>([]);
-  const { members, loading, dummy, render } = useMembers({ gymId: gymId! });
+  const { members, loading, dummy, render } = useMembers({
+    gymId: gymId!,
+    id: "all",
+  });
   const { toast } = useToast();
 
   const clear = () => {
