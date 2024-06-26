@@ -32,12 +32,18 @@ export const MemberFeesColumns = [
   {
     accessorKey: "paidDate",
     header: "Payment Date",
-    cell: (rowData: any) => dateFormat(rowData.paidDate, "dd/mm/yyyy"),
+    cell: ({ row }: { row: { original: MemberFeeOptions } }) => {
+      const paidDate = row.original.paidDate ?? "N/A";
+      return dateFormat(paidDate, "dd/mm/yyyy");
+    },
   },
   {
     accessorKey: "dueDate",
     header: "Due Date",
-    cell: (rowData: any) => dateFormat(rowData.dueDate, "dd/mm/yyyy"),
+    cell: ({ row }: { row: { original: MemberFeeOptions } }) => {
+      const dueDate = row.original.dueDate ?? "N/A";
+      return dateFormat(dueDate, "dd/mm/yyyy");
+    },
   },
   {
     accessorKey: "status",
