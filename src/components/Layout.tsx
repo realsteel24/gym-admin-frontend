@@ -26,7 +26,8 @@ export function Layout({
           <div>
             <SidebarItem href={"/gym"} icon={<HomeIcon />} title="Home" />
             <SidebarItem
-              href={"/gym/dashboard"}
+              //TODO: Change this later
+              href={"/gym/01/dashboard"}
               icon={<TransferIcon />}
               title="Dashboard"
             />

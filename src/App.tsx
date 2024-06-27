@@ -33,7 +33,7 @@ function App() {
 
           {/* This will come later */}
           <Route
-            path="/gym/dashboard"
+            path="/gym/:gymId/dashboard"
             element={<Layout children={<Dashboard />} />}
           />
 
