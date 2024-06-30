@@ -74,7 +74,7 @@ export const CreateMemberFee = () => {
       (item) => item.id === selectedCategoryId
     );
     if (selectedCategory) {
-      setSelectedAmount(selectedCategory.amount);
+      setSelectedAmount(parseInt(selectedCategory.amount));
       setDueDate(calculateDueDate(paidDate, selectedCategory.frequency));
     }
   };
@@ -132,7 +132,7 @@ export const CreateMemberFee = () => {
     }
   }
   const memberOptions = memberList.map((member) => ({
-    value: member.id,
+    value: member.Members[0].id,
     label: member.name,
   }));
 

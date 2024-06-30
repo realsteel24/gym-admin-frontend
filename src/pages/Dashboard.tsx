@@ -41,12 +41,12 @@ import {
 } from "@/components/ui/table";
 import { useMemberFees } from "@/hooks";
 import { useParams } from "react-router-dom";
+import dateFormat from "dateformat";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
   const { memberFees } = useMemberFees({ gymId: gymId! });
 
-  
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-white dark:bg-black px-4 md:px-6">
@@ -178,7 +178,7 @@ export function Dashboard() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">{}</div>
               <p className="text-xs text-muted-foreground">
                 +20.1% from last month
               </p>
@@ -229,11 +229,11 @@ export function Dashboard() {
               <div className="grid gap-4">
                 <CardTitle>Transactions</CardTitle>
                 <CardDescription>
-                  Recent transactions from your store.
+                  Recent transactions from your gym.
                 </CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
-                <Link to={"null"}>
+                <Link to={`/gym/${gymId}/memberFees`}>
                   View All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -250,8 +250,8 @@ export function Dashboard() {
                     <TableHead className="hidden xl:table-column">
                       Status
                     </TableHead>
-                    <TableHead className="hidden xl:table-column">
-                      Date
+                    <TableHead className="hidden md:block">
+                      Payment Date
                     </TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                   </TableRow>
@@ -260,9 +260,11 @@ export function Dashboard() {
                 <TableBody>
                   {memberFees.map((fee) => (
                     <TableRow key={fee.id}>
-                      <div className="font-medium mt-2">{fee.Member.User.name }</div>
+                      <div className="font-medium mt-2">
+                        {fee.Member.User.name}
+                      </div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
-                        liam@example.com
+                        {fee.Member.MemberPrograms[0].Program.name}
                       </div>
                       <TableCell className="hidden xl:table-column">
                         Sale
@@ -272,13 +274,14 @@ export function Dashboard() {
                           Approved
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                        2023-06-23
+                      <TableCell className="hidden md:table-cell">
+                        {dateFormat(fee.paidDate, "dd/mm/yyyy")}
                       </TableCell>
-                      <TableCell className="text-right">₹ {fee.Payments[0].amount }</TableCell>
+                      <TableCell className="text-right">
+                        ₹ {fee.Payments[0].amount}
+                      </TableCell>
                     </TableRow>
                   ))}
-                  
                 </TableBody>
               </Table>
             </CardContent>

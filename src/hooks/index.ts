@@ -63,7 +63,7 @@ export interface BatchOptions {
 export interface FeeOptions {
   id: string;
   frequency: string;
-  amount: number;
+  amount: string;
   description: string;
   _count: {
     MemberFees: number;
