@@ -346,6 +346,40 @@ export const useMemberFees = ({ gymId }: { gymId: string }) => {
     memberFeesLoading,
   };
 };
+export const usePayments = ({ gymId }: { gymId: string }) => {
+  const [paymentsLoading, setPaymentsLoading] = useState(true);
+  const [payments, setPayments] = useState(0);
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/api/v1/admin/${gymId}/payments`,
+          {
+            headers: { authorization: localStorage.getItem("token") ?? "" },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const result = await response.json();
+        setPayments(result.amount);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      } finally {
+        setPaymentsLoading(false);
+      }
+    };
+
+    fetchPayments();
+  }, [gymId]);
+
+  return {
+    payments,
+    paymentsLoading,
+  };
+};
 
 // export const useBatchMembers = ({ id, gymId }: { id: string; gymId: string }) => {
 //   const [loading, setLoading] = useState(true);

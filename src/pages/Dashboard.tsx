@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,13 +38,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useMemberFees } from "@/hooks";
+import { useMemberFees, usePayments } from "@/hooks";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
   const { memberFees } = useMemberFees({ gymId: gymId! });
+  const { payments } = usePayments({ gymId: gymId! });
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -178,7 +178,7 @@ export function Dashboard() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{}</div>
+              <div className="text-2xl font-bold">{payments} </div>
               <p className="text-xs text-muted-foreground">
                 +20.1% from last month
               </p>
@@ -244,12 +244,7 @@ export function Dashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Customer</TableHead>
-                    <TableHead className="hidden xl:table-column">
-                      Type
-                    </TableHead>
-                    <TableHead className="hidden xl:table-column">
-                      Status
-                    </TableHead>
+
                     <TableHead className="hidden md:block">
                       Payment Date
                     </TableHead>
@@ -258,22 +253,17 @@ export function Dashboard() {
                 </TableHeader>
 
                 <TableBody>
-                  {memberFees.map((fee) => (
+                  {memberFees.slice(0, 6).map((fee) => (
                     <TableRow key={fee.id}>
-                      <div className="font-medium mt-2">
-                        {fee.Member.User.name}
-                      </div>
-                      <div className="hidden text-sm text-muted-foreground md:inline">
-                        {fee.Member.MemberPrograms[0].Program.name}
-                      </div>
-                      <TableCell className="hidden xl:table-column">
-                        Sale
+                      <TableCell>
+                        <div className="font-medium">
+                          {fee.Member.User.name}
+                        </div>
+                        <div className="hidden text-sm text-muted-foreground md:inline">
+                          {fee.Member.MemberPrograms[0].Program.name}
+                        </div>
                       </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Approved
-                        </Badge>
-                      </TableCell>
+
                       <TableCell className="hidden md:table-cell">
                         {dateFormat(fee.paidDate, "dd/mm/yyyy")}
                       </TableCell>
