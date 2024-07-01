@@ -7,12 +7,15 @@ import { ProgramCard } from "@/components/cards/ProgramCard";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import React, { useState } from "react";
+import { Dashboard } from "./Dashboard";
 
 export function GymProfile({ children }: { children?: React.ReactNode }) {
-  const [activeComponent, setActiveComponent] = useState("Member");
+  const [activeComponent, setActiveComponent] = useState("Dashboard");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const renderComponent = () => {
     switch (activeComponent) {
+      case "Dashboard":
+        return <Dashboard />;
       case "Program":
         return <ProgramCard />;
       case "Batch":
@@ -27,7 +30,7 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
         return <InstructorCard />;
 
       default:
-        return <MemberCard />;
+        return <Dashboard />;
     }
   };
   const handleDropdownToggle = () => {
@@ -85,9 +88,10 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
                 aria-labelledby="options-menu"
               >
                 {[
+                  "Dashboard",
                   "Program",
                   "Batch",
-                  "Members",
+                  "Member",
                   "FeeStructure",
                   "Payment",
                   "Instructor",
@@ -114,6 +118,18 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
         <div className="flex justify-center mx-auto mx-5 border-2 rounded-xl py-1 lg:block hidden px-4">
           <Button
             variant={"default"}
+            onClick={() => setActiveComponent("Dashboard")}
+            className={`inline-flex items-center hover:font-bold justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50  h-9 px-4 py-2 mr-2  ${
+              activeComponent === "Dashboard"
+                ? "underline underline-offset-4 decoration-2"
+                : null
+            }`}
+          >
+            Dashboard
+          </Button>
+
+          <Button
+            variant={"default"}
             onClick={() => setActiveComponent("Program")}
             className={`inline-flex items-center hover:font-bold justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50  h-9 px-4 py-2 mr-2  ${
               activeComponent === "Program"
@@ -137,9 +153,9 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
           </Button>
           <Button
             variant={"default"}
-            onClick={() => setActiveComponent("Members")}
+            onClick={() => setActiveComponent("Member")}
             className={`inline-flex items-center justify-center hover:font-bold whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 rounded-xl mr-2 ${
-              activeComponent === "Members"
+              activeComponent === "Member"
                 ? "underline underline-offset-4 decoration-2"
                 : null
             }`}
