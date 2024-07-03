@@ -3,11 +3,11 @@ import {
   Activity,
   ArrowUpRight,
   CreditCard,
-  DollarSign,
+  IndianRupee,
   Users,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,15 +24,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { useMemberFees, usePayments, useStatusCount } from "@/hooks";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
+import * as echarts from 'echarts';
+import { useEffect, useRef } from "react";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
   const { memberFees, memberFeesLoading } = useMemberFees({ gymId: gymId! });
   const { payments, paymentsLoading } = usePayments({ gymId: gymId! });
   const { statusCount, statusCountLoading } = useStatusCount({ gymId: gymId! });
+  const chartRef = useRef<echarts.ECharts | null>(null);
+
+  useEffect(() => {
+    if (!chartRef.current) {
+      chartRef.current = echarts.init(document.getElementById('main')!);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chartRef.current && !paymentsLoading) {
+      const option = {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            data: [120, 200, 150, 80, 70, 110, 130],
+            type: 'bar',
+          },
+        ],
+      };
+      chartRef.current.setOption(option);
+    }
+  }, [paymentsLoading]);
+
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -43,7 +75,7 @@ export function Dashboard() {
               <CardTitle className="text-sm font-medium">
                 Total Revenue
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <IndianRupee className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               {paymentsLoading ? (
@@ -208,8 +240,9 @@ export function Dashboard() {
                         <TableCell className="hidden md:table-cell">
                           {dateFormat(fee.paidDate, "dd/mm/yyyy")}
                         </TableCell>
-                        <TableCell className="text-right">
-                          ₹ {fee.Payments[0].amount}
+                        <TableCell className="items-center text-right flex justify-end">
+                          <IndianRupee className="h-3 w-3 " />
+                          {fee.Payments[0].amount}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -218,6 +251,7 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
+
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
               <CardTitle>Recent Sales</CardTitle>
@@ -225,7 +259,6 @@ export function Dashboard() {
             <CardContent className="grid gap-8">
               <div className="flex items-center gap-4">
                 <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
                   <AvatarFallback>OM</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
@@ -240,7 +273,6 @@ export function Dashboard() {
               </div>
               <div className="flex items-center gap-4">
                 <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
                   <AvatarFallback>JL</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
@@ -255,7 +287,6 @@ export function Dashboard() {
               </div>
               <div className="flex items-center gap-4">
                 <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
                   <AvatarFallback>IN</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
@@ -270,7 +301,6 @@ export function Dashboard() {
               </div>
               <div className="flex items-center gap-4">
                 <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
                   <AvatarFallback>WK</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
@@ -285,7 +315,6 @@ export function Dashboard() {
               </div>
               <div className="flex items-center gap-4">
                 <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
                   <AvatarFallback>SD</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
@@ -300,6 +329,8 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
+          <div id="main"  style={{ width: '100%', height: '400px' }} className="col-span-1 md:col-span-2 w-full flex justify-center"></div>
+
         </div>
       </main>
     </div>

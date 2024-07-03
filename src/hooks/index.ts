@@ -344,6 +344,7 @@ export const useMemberFees = ({ gymId }: { gymId: string }) => {
     memberFeesLoading,
   };
 };
+
 export const usePayments = ({ gymId }: { gymId: string }) => {
   const [paymentsLoading, setPaymentsLoading] = useState(true);
   const [payments, setPayments] = useState(0);
