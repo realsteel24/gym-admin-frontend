@@ -27,9 +27,10 @@ export const CreateMemberFee = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
 
-  const { feeCategories, feeCategoryLoading } = useFeeCategories({
-    gymId: gymId!,
-  });
+  const { feeCategories, feeCategoryLoading, fetchCategories } =
+    useFeeCategories({
+      gymId: gymId!,
+    });
 
   const [feeCategoriesList, setFeeCategoriesList] = useState<FeeOptions[]>([]);
   const [memberId, setMemberId] = useState("");
@@ -145,7 +146,12 @@ export const CreateMemberFee = () => {
       <CustomDialogForm
         fn={() => render((prev) => prev + 1)}
         isOpen={isDialogOpen}
-        setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
+        setIsOpen={() => {
+          setIsDialogOpen(!isDialogOpen);
+          if (!isDialogOpen) {
+            fetchCategories();
+          }
+        }}
         FormTitle="Record a Payment"
         FormDescription="Please add all the necessary fields and click save"
         titleButton="Add transaction"

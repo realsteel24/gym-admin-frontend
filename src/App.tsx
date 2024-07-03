@@ -27,7 +27,7 @@ function App() {
           <Route
             path="/gym/:gymId/programs"
             element={
-              <Layout children={<GymProfile children={<Programs />} />} />
+              <Layout children={<Programs /> } />
             }
           />
 

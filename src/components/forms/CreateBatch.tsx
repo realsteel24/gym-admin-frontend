@@ -18,7 +18,9 @@ export const CreateBatch = () => {
   const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
   const navigate = useNavigate();
   const { gymId } = useParams<{ gymId: string }>();
-  const { programLoading, programs } = usePrograms({ gymId: gymId! });
+  const { programLoading, programs, fetchPrograms } = usePrograms({
+    gymId: gymId!,
+  });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
@@ -77,7 +79,12 @@ export const CreateBatch = () => {
     <div>
       <CustomDialogForm
         isOpen={isDialogOpen}
-        setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
+        setIsOpen={() => {
+          setIsDialogOpen(!isDialogOpen);
+          if (!isDialogOpen) {
+            fetchPrograms();
+          }
+        }}
         FormTitle="Create a Batch"
         FormDescription=" Please add all the necessary fields and click save"
         titleButton="Create Batch"

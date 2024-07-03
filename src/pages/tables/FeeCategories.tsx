@@ -1,17 +1,21 @@
 import { DataTable } from "@/components/Data-table";
 import { Skeleton } from "@/components/Skeleton";
 import { useFeeCategories } from "@/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { FeeCategoryColumns } from "./columns/FeeCategoryColumns";
 
 export const FeeCategories = () => {
   const { gymId } = useParams<{ gymId: string }>();
-  const { feeCategories, feeCategoryLoading } = useFeeCategories({
-    gymId: gymId!,
-  });
+  const { feeCategories, feeCategoryLoading, fetchCategories } =
+    useFeeCategories({
+      gymId: gymId!,
+    });
   const navigate = useNavigate();
   const [counter, setCounter] = useState(0);
+  useEffect(() => {
+    fetchCategories()
+  }, [gymId])
 
   return (
     <div>
@@ -61,5 +65,6 @@ export const ViewFeeCategories = (
   gymId: string,
   navigate: NavigateFunction
 ) => {
+  
   navigate(`/gym/${gymId}/feeCategories`);
 };

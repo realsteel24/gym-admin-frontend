@@ -20,7 +20,9 @@ export const CreateMemberProgram = () => {
   const { gymId } = useParams<{ gymId: string }>();
   const [programId, setProgramId] = useState("");
   const [memberId, setMemberId] = useState("");
-  const { programLoading, programs } = usePrograms({ gymId: gymId! });
+  const { programLoading, programs, fetchPrograms } = usePrograms({
+    gymId: gymId!,
+  });
   const { batches } = useBatches({ gymId: gymId!, id: programId });
   const { members, loading, dummy, render } = useMembers({
     gymId: gymId!,
@@ -120,7 +122,12 @@ export const CreateMemberProgram = () => {
       <CustomDialogForm
         fn={() => render((prev) => prev + 1)}
         isOpen={isDialogOpen}
-        setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
+        setIsOpen={() => {
+          setIsDialogOpen(!isDialogOpen);
+          if (!isDialogOpen) {
+            fetchPrograms();
+          }
+        }}
         FormTitle="Add Member to Program"
         FormDescription="Please add all the necessary fields and click save"
         titleButton="Add Member"

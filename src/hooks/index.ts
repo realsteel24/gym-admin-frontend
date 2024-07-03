@@ -180,7 +180,7 @@ export const useGyms = () => {
 export const usePrograms = ({ gymId }: { gymId: string }) => {
   const [programLoading, setProgramLoading] = useState(true);
   const [programs, setPrograms] = useState<ProgramsOptions[]>([]);
-  useEffect(() => {
+  const fetchPrograms = async () => {
     try {
       fetch(`${BACKEND_URL}/api/v1/admin/${gymId}/programs`, {
         headers: { authorization: localStorage.getItem("token") ?? "" },
@@ -195,10 +195,11 @@ export const usePrograms = ({ gymId }: { gymId: string }) => {
     } catch (error) {
       console.log(`Error: ${error}`);
     }
-  }, [gymId]);
+  };
   return {
     programs,
     programLoading,
+    fetchPrograms,
   };
 };
 
@@ -245,33 +246,30 @@ export const useFeeCategories = ({ gymId }: { gymId: string }) => {
   const [feeCategoryLoading, setLoading] = useState(true);
   const [feeCategories, setFeeCategories] = useState<FeeOptions[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/${gymId}/feeCategories`,
-          {
-            headers: { authorization: localStorage.getItem("token") ?? "" },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Something went wrong");
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/api/v1/admin/${gymId}/feeCategories`,
+        {
+          headers: { authorization: localStorage.getItem("token") ?? "" },
         }
-        const result = await response.json();
-        setFeeCategories(result.feeCategory);
-      } catch (error) {
-        console.error("Error fetching batches:", error);
-      } finally {
-        setLoading(false);
+      );
+      if (!response.ok) {
+        throw new Error("Something went wrong");
       }
-    };
-
-    fetchCategories();
-  }, [gymId]);
+      const result = await response.json();
+      setFeeCategories(result.feeCategory);
+    } catch (error) {
+      console.error("Error fetching batches:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     feeCategories,
     feeCategoryLoading,
+    fetchCategories,
   };
 };
 
