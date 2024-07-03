@@ -72,24 +72,32 @@ export const CreateMember = () => {
         children={
           <div>
             <LabelledInput
+              formId="Name"
+              formName="Name"
               autoComplete="name"
               label="Name"
               placeholder="Full Name"
               onChange={(e) => setName(e.target.value)}
             />
             <LabelledInput
+              formId="Email"
+              formName="Email"
               autoComplete="email"
               label="Email"
               placeholder="@gmail.com"
               onChange={(e) => setEmail(e.target.value)}
             />
             <LabelledInput
+              formId="Contact"
+              formName="Contact"
               autoComplete="phone"
               label="Contact"
               placeholder="Contact Number"
               onChange={(e) => setContact(e.target.value)}
             />
             <LabelledInput
+              formId="Birth Date"
+              formName="Birth Date"
               label="Birth Date"
               placeholder={"Enter Date"}
               selectedDate={dob}
@@ -98,6 +106,8 @@ export const CreateMember = () => {
             />
 
             <LabelledInput
+                 formId="Enroll"
+                 formName="Enroll"
               label="Enrollment Date"
               placeholder="Date of joining"
               selectedDate={enrollmentDate}

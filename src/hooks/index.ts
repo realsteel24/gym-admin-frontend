@@ -378,6 +378,40 @@ export const usePayments = ({ gymId }: { gymId: string }) => {
     paymentsLoading,
   };
 };
+export const useStatusCount = ({ gymId }: { gymId: string }) => {
+  const [statusCountLoading, setStatusCountLoading] = useState(true);
+  const [statusCount, setStatusCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/api/v1/admin/${gymId}/statusCount`,
+          {
+            headers: { authorization: localStorage.getItem("token") ?? "" },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const result = await response.json();
+        setStatusCount(result.count.status);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      } finally {
+        setStatusCountLoading(false);
+      }
+    };
+
+    fetchPayments();
+  }, [gymId]);
+
+  return {
+    statusCount,
+    statusCountLoading,
+  };
+};
 
 // export const useBatchMembers = ({ id, gymId }: { id: string; gymId: string }) => {
 //   const [loading, setLoading] = useState(true);

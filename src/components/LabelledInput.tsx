@@ -48,6 +48,7 @@ export function LabelledInput({
         </Label>
         {type === "Calendar" ? (
           <DatePicker
+            id={formId}
             showYearDropdown
             scrollableYearDropdown
             popperPlacement="top-start"

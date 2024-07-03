@@ -72,12 +72,16 @@ export const CreateProgram = () => {
         children={
           <div>
             <LabelledInput
+              formId="Program"
+              formName="Program"
               label="Program"
               placeholder="Program Name"
               defaultValue="Kickboxing"
               onChange={(e) => setName(e.target.value)}
             />
             <LabelledInput
+              formId="Description"
+              formName="Description"
               label="Description"
               placeholder="Description"
               defaultValue="Martial Arts is a way of life"

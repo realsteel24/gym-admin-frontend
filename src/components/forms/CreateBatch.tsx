@@ -109,23 +109,31 @@ export const CreateBatch = () => {
               </select>
             </div>
             <LabelledInput
+              formId="Batch"
+              formName="Batch"
               label="Batch Name"
               placeholder="Batch Name"
               onChange={(e) => setName(e.target.value)}
             />
             <LabelledInput
+              formId="Start"
+              formName="Start"
               label="Start Time"
               placeholder="Time"
               defaultValue="8:00 PM"
               onChange={(e) => setStartTime(e.target.value)}
             />
             <LabelledInput
+              formId="End"
+              formName="End"
               label="End Time"
               placeholder="Time"
               defaultValue="9:00 PM"
               onChange={(e) => setEndTime(e.target.value)}
             />
             <LabelledInput
+              formId="Days"
+              formName="Days"
               label="Days"
               placeholder="Days"
               defaultValue="Mon, Wed, Fri"

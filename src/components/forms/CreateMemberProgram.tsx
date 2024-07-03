@@ -172,11 +172,11 @@ export const CreateMemberProgram = () => {
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label htmlFor="member" className="text-right">
+              <Label htmlFor="members" className="text-right">
                 Select Member
               </Label>
               <Select
-                id="member"
+                id="members"
                 value={memberOptions.find(
                   (option) => option.value === memberId
                 )}
@@ -187,6 +187,8 @@ export const CreateMemberProgram = () => {
               />
             </div>
             <LabelledInput
+              formId="Start"
+              formName="Start"
               label="Start Date"
               placeholder={"Enter Date"}
               selectedDate={startDate}
@@ -194,6 +196,8 @@ export const CreateMemberProgram = () => {
               type="Calendar"
             />
             <LabelledInput
+              formId="End"
+              formName="End"
               label="End Date"
               placeholder={"Enter Date"}
               selectedDate={endDate}

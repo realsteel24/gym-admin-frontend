@@ -45,7 +45,7 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
   return (
     <div>
       <div className="flex justify-center text-2xl py-4 underline underline-offset-8 decoration-4 decoration-accent font-semibold">
-        Mohan's Planet
+        {localStorage.getItem("gymName")}
       </div>
 
       <div className=" lg:hidden block ">

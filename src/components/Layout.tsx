@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { Appbar } from "./AppBar";
 import {
   SidebarItem,
@@ -12,11 +13,20 @@ export function Layout({
 }: {
   children: React.ReactNode;
 }): React.JSX.Element {
+  const navigate = useNavigate();
+  const { gymId } = useParams<{ gymId: string }>();
   return (
     <div className="">
       <Appbar
         children={
-          <Button onClick={() => {}} size={"sm"} variant={"outline"}>
+          <Button
+            onClick={() => {
+              localStorage.clear();
+              navigate("/signin");
+            }}
+            size={"sm"}
+            variant={"outline"}
+          >
             Logout
           </Button>
         }
@@ -27,7 +37,7 @@ export function Layout({
             <SidebarItem href={"/gym"} icon={<HomeIcon />} title="Home" />
             <SidebarItem
               //TODO: Change this later
-              href={"/gym/01/dashboard"}
+              href={`/gym/${gymId}/dashboard`}
               icon={<TransferIcon />}
               title="Dashboard"
             />

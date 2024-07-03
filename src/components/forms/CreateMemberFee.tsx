@@ -158,18 +158,18 @@ export const CreateMemberFee = () => {
         children={
           <div>
             <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label htmlFor="member" className="text-right">
+              <Label htmlFor="members"  className="text-right">
                 Member
               </Label>
               <Select
-                id="member"
+                id="members"
                 value={memberOptions.find(
                   (option) => option.value === memberId
                 )}
                 onChange={handleMemberChange}
                 options={memberOptions}
                 className="col-span-3 dark:bg-black"
-                classNamePrefix="react-select  dark:bg-black"
+                classNamePrefix="react-select dark:bg-black"
               />
             </div>
 
@@ -192,7 +192,7 @@ export const CreateMemberFee = () => {
               </select>
             </div>
             <LabelledInput
-              formId="amount"
+              formId="Amount"
               formName="Amount"
               label="Amount"
               type="text"

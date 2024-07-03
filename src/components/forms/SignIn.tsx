@@ -10,6 +10,7 @@ export const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [gymCode, setGymCode] = useState("");
 
   const handleSubmit = async () => {
     setError("");
@@ -19,6 +20,7 @@ export const SignIn = () => {
         body: JSON.stringify({
           username: username,
           password: password,
+          gymCode: gymCode,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +32,10 @@ export const SignIn = () => {
       const admin = await response.json();
       localStorage.setItem("token", admin.jwt);
 
-      navigate("/gym");
+      admin.jwt ===
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoibWFzdGVyIn0.UJ2j7urR89yBU63TcWW4Wy4FZ72KV30sCTLWXVyZy5k"
+        ? navigate("/gym")
+        : navigate(`/gym/${gymCode.split("/")[1]}/menu`);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -42,11 +47,23 @@ export const SignIn = () => {
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="h-screen flex-col flex justify-center bg-slate-800">
-          <div className=" max-w-md w-full">
-            <div className="text-gray-200 text-4xl flex justify-center">
-              Sign In
-            </div>
-            <div className="items-center m-5">
+          <div className="w-full flex justify-center">
+            <div>
+              <div className="text-gray-200 text-4xl text-center mb-5">
+                Log In
+              </div>
+              <LabelledInput
+                label="Gym Code"
+                placeholder="Code"
+                labelColor="gray-200"
+                textColor="white"
+                formName="GymCode"
+                formId="GymCode"
+                autoComplete="Code"
+                onChange={(e) => {
+                  setGymCode(e.target.value.toUpperCase());
+                }}
+              />
               <LabelledInput
                 label="Username"
                 placeholder="Email"
@@ -88,13 +105,15 @@ export const SignIn = () => {
             </div>
           </div>
         </div>
-        <div className="bg-lime-300 hidden md:block flex justify-center">
-          <div className="h-screen flex-col flex justify-center lg:ml-30 ml-20">
-            <div className="text-6xl font-semibold flex justify-center text-gray-600 max-w-md text-start">
-              My work has been made easy!
-            </div>
-            <div className="text-xl flex justify-center text-black pt-4 max-w-md">
-              -Admin
+        <div className="bg-lime-300 hidden md:block">
+          <div className="w-full flex justify-center">
+            <div className="h-screen flex-col flex justify-center ">
+              <div className="text-6xl font-semibold text-gray-600 max-w-md text-start">
+                My work has been made easy!
+              </div>
+              <div className="text-xl flex justify-center text-black pt-4 max-w-md pl-10">
+                -Admin
+              </div>
             </div>
           </div>
         </div>

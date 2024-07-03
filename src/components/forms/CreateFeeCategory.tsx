@@ -91,11 +91,15 @@ export const CreateFeeCategory = () => {
         children={
           <div>
             <LabelledInput
+              formId="Package"
+              formName="Package"
               label="Category Name"
               placeholder="Package Name"
               onChange={(e) => setDescription(e.target.value)}
             />
             <LabelledInput
+              formId="Amount"
+              formName="Amount"
               label="Amount"
               placeholder="Amount"
               defaultValue="1500"
@@ -103,7 +107,9 @@ export const CreateFeeCategory = () => {
             />
 
             <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label className="text-right">Duration</Label>
+              <Label htmlFor="frequency" className="text-right">
+                Duration
+              </Label>
               <select
                 id="frequency"
                 value={frequency}
