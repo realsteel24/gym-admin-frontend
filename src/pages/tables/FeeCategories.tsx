@@ -50,7 +50,7 @@ export const FeeCategories = () => {
               columns={FeeCategoryColumns}
               data={feeCategories.map((item) => ({
                 ...item,
-                counter, // Add the counter if needed for re-render
+                counter,
                 setCounter,
               }))}
             />

@@ -88,7 +88,7 @@ export const CreateMemberFee = () => {
       halfYearly: 6,
       yearly: 12,
     };
-    const monthsToAdd = frequencies[frequency.toLowerCase() as Frequency] || 1;
+    const monthsToAdd = frequencies[frequency.toLowerCase() as Frequency] || 240;
     return addMonths(startDate, monthsToAdd);
   };
 

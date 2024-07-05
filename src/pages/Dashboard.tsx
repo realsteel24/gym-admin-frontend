@@ -28,65 +28,14 @@ import {
 import { useMemberFees, usePayments, useStatusCount } from "@/hooks";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
-import * as echarts from "echarts";
-import { useEffect, useRef } from "react";
+import { MonthlyCollection } from "@/components/vizualizations/MonthlyCollection";
+import GenderPieChart from "@/components/vizualizations/GenderPieChart";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
   const { memberFees, memberFeesLoading } = useMemberFees({ gymId: gymId! });
   const { payments, paymentsLoading } = usePayments({ gymId: gymId! });
   const { statusCount, statusCountLoading } = useStatusCount({ gymId: gymId! });
-  const chartRef = useRef<echarts.ECharts | null>(null);
-
-  useEffect(() => {
-    if (!chartRef.current) {
-      chartRef.current = echarts.init(document.getElementById("main")!);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (chartRef.current && !memberFeesLoading) {
-      // Process payments data to fit the chart format
-      const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-      const paymentsByDay = new Array(7).fill(0);
-
-      memberFees.forEach((fee) => {
-        const dayIndex = new Date(fee.paidDate).getDay();
-        paymentsByDay[dayIndex] = Number(fee.Payments[0].amount);
-      });
-
-      const option = {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow",
-          },
-
-          formatter: function (params: any[]) {
-            const payment: number = params[0].value;
-            return `${params[0].name}: ${payment}`;
-          },
-        },
-        xAxis: {
-          type: "category",
-          data: daysOfWeek,
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            data: paymentsByDay.map((sum, index) => ({
-              name: daysOfWeek[index],
-              value: sum,
-            })),
-            type: "bar",
-          },
-        ],
-      };
-      chartRef.current.setOption(option);
-    }
-  }, [memberFeesLoading, memberFees]);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -94,8 +43,11 @@ export function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <Card x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium flex">
                 Total Revenue
+                <p className="text-xs text-muted-foreground pl-2 flex-col flex justify-center">
+                  | Current month
+                </p>
               </CardTitle>
               <IndianRupee className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -273,8 +225,16 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
+          <GenderPieChart memberFees={memberFees} />
 
-          <Card x-chunk="dashboard-01-chunk-5">
+         
+
+          <MonthlyCollection
+            memberFees={memberFees}
+            memberFeesLoading={memberFeesLoading}
+          />
+
+<Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
               <CardTitle>Recent Sales</CardTitle>
             </CardHeader>
@@ -351,12 +311,6 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-
-          <div
-            id="main"
-            style={{ width: "100%", height: "400px" }}
-            className="col-span-1 md:col-span-2 w-full flex justify-center"
-          ></div>
         </div>
       </main>
     </div>

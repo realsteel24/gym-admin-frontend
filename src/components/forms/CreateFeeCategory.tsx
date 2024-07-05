@@ -14,6 +14,7 @@ enum PaymentFrequency {
   Quarterly = "Quarterly",
   HalfYearly = "HalfYearly",
   Yearly = "Yearly",
+  OneTime = "OneTime",
 }
 
 export const CreateFeeCategory = () => {
