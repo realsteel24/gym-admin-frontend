@@ -7,11 +7,13 @@ export interface MemberOptions {
   email: string;
   dob: string | null;
   contact: string;
+  gender: string;
   Members: {
     0: {
       id: string;
       enrollmentDate: string;
       gymId: string;
+      MemberFees?: { 0: { paidDate?: string } };
       MemberPrograms: {
         0: {
           Program: { name: string };
@@ -103,7 +105,7 @@ export interface MemberFeeOptions {
   FeeCategory: { description: true; frequency: true };
   Payments: { 0: { amount: true } };
   Member: {
-    User: { name: string; contact: string };
+    User: { name: string; contact: string; gender: string };
     MemberPrograms: {
       0: {
         Batch: { name: true };

@@ -28,7 +28,7 @@ import {
 import { useMemberFees, usePayments, useStatusCount } from "@/hooks";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
-import * as echarts from 'echarts';
+import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 
 export function Dashboard() {
@@ -40,31 +40,53 @@ export function Dashboard() {
 
   useEffect(() => {
     if (!chartRef.current) {
-      chartRef.current = echarts.init(document.getElementById('main')!);
+      chartRef.current = echarts.init(document.getElementById("main")!);
     }
   }, []);
 
   useEffect(() => {
-    if (chartRef.current && !paymentsLoading) {
+    if (chartRef.current && !memberFeesLoading) {
+      // Process payments data to fit the chart format
+      const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const paymentsByDay = new Array(7).fill(0);
+
+      memberFees.forEach((fee) => {
+        const dayIndex = new Date(fee.paidDate).getDay();
+        paymentsByDay[dayIndex] = Number(fee.Payments[0].amount);
+      });
+
       const option = {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
+
+          formatter: function (params: any[]) {
+            const payment: number = params[0].value;
+            return `${params[0].name}: ${payment}`;
+          },
+        },
         xAxis: {
-          type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          type: "category",
+          data: daysOfWeek,
         },
         yAxis: {
-          type: 'value',
+          type: "value",
         },
         series: [
           {
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar',
+            data: paymentsByDay.map((sum, index) => ({
+              name: daysOfWeek[index],
+              value: sum,
+            })),
+            type: "bar",
           },
         ],
       };
       chartRef.current.setOption(option);
     }
-  }, [paymentsLoading]);
-
+  }, [memberFeesLoading, memberFees]);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -329,8 +351,12 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <div id="main"  style={{ width: '100%', height: '400px' }} className="col-span-1 md:col-span-2 w-full flex justify-center"></div>
 
+          <div
+            id="main"
+            style={{ width: "100%", height: "400px" }}
+            className="col-span-1 md:col-span-2 w-full flex justify-center"
+          ></div>
         </div>
       </main>
     </div>

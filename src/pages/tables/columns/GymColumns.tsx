@@ -29,7 +29,6 @@ export const GymColumns: ColumnDef<GymOptions>[] = [
       <Button
         variant={"outline"}
         onClick={() => {
-          localStorage.setItem("gymName", row.original.name);
           row.original.navigate(`/gym/${row.original.id}/menu`);
         }}
         size={"sm"}

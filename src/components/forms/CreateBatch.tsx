@@ -90,7 +90,7 @@ export const CreateBatch = () => {
         titleButton="Create Batch"
         children={
           <div>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 items-center gap-4 ">
               <Label htmlFor="program" className="text-right">
                 Select Program
               </Label>

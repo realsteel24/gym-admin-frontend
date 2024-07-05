@@ -12,6 +12,7 @@ export const CreateMember = () => {
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
   const [dob, setDob] = useState<Date>(new Date());
+  const [gender, setGender] = useState("Undefined");
   const [enrollmentDate, setEnrollmentDate] = useState<Date>(new Date());
 
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export const CreateMember = () => {
           email,
           contact,
           dob,
+          gender,
           enrollmentDate,
         }),
         headers: {
@@ -96,6 +98,14 @@ export const CreateMember = () => {
               onChange={(e) => setContact(e.target.value)}
             />
             <LabelledInput
+              formId="Gender"
+              formName="Gender"
+              autoComplete="gender"
+              label="Gender"
+              placeholder="eg. Female"
+              onChange={(e) => setGender(e.target.value)}
+            />
+            <LabelledInput
               formId="Birth Date"
               formName="Birth Date"
               label="Birth Date"
@@ -106,8 +116,8 @@ export const CreateMember = () => {
             />
 
             <LabelledInput
-                 formId="Enroll"
-                 formName="Enroll"
+              formId="Enroll"
+              formName="Enroll"
               label="Enrollment Date"
               placeholder="Date of joining"
               selectedDate={enrollmentDate}

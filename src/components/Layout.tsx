@@ -32,22 +32,21 @@ export function Layout({
         }
       />
       <div className="flex ">
-        <div className="w-72 min-h-screen pt-28 hidden lg:block bg-gray-300 bg-opacity-10 dark:bg-opacity-10 backdrop-filter backdrop-blur-sm  rounded-lg">
-          <div>
-            <SidebarItem href={"/gym"} icon={<HomeIcon />} title="Home" />
-            <SidebarItem
-              //TODO: Change this later
-              href={`/gym/${gymId}/dashboard`}
-              icon={<TransferIcon />}
-              title="Dashboard"
-            />
-            <SidebarItem
-              href={"/payment"}
-              icon={<TransactionsIcon />}
-              title="Record Payment"
-            />
+          <div className="w-72 min-h-screen pt-28 hidden lg:block bg-gray-300 bg-opacity-10 dark:bg-opacity-10 backdrop-filter backdrop-blur-sm  rounded-lg">
+            <div>
+              <SidebarItem href={"/gym"} icon={<HomeIcon />} title="Home" />
+              <SidebarItem
+                href={`/gym/${gymId}/dashboard`}
+                icon={<TransferIcon />}
+                title="Dashboard"
+              />
+              <SidebarItem
+                href={`/gym/${gymId}/menu`}
+                icon={<TransactionsIcon />}
+                title="Record Payment"
+              />
+            </div>
           </div>
-        </div>
         <div className="w-full dark:bg-black bg-white">{children}</div>
       </div>
     </div>
