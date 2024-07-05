@@ -6,12 +6,14 @@ import { PaymentCard } from "@/components/cards/PaymentCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Dashboard } from "./Dashboard";
+import { useGymNameContext } from "@/context/Gym";
 
-export function GymProfile({ children }: { children?: React.ReactNode }) {
+export function GymProfile() {
   const [activeComponent, setActiveComponent] = useState("Dashboard");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { gymName, loading } = useGymNameContext();
   const renderComponent = () => {
     switch (activeComponent) {
       case "Dashboard":
@@ -45,7 +47,7 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
   return (
     <div>
       <div className="flex justify-center text-2xl py-4 underline underline-offset-8 decoration-4 decoration-accent font-semibold">
-        {localStorage.getItem("gymName")}
+        {loading ? "loading.." : gymName}
       </div>
 
       <div className=" lg:hidden block ">
@@ -199,10 +201,7 @@ export function GymProfile({ children }: { children?: React.ReactNode }) {
         </div>
       </div>
       <Toaster />
-      <div>
-        {renderComponent()}
-        {children}
-      </div>
+      <div>{renderComponent()}</div>
     </div>
   );
 }

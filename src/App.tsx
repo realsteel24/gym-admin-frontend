@@ -11,6 +11,7 @@ import { FeeCategories } from "./pages/tables/FeeCategories";
 import { Members } from "./pages/tables/Members";
 import { MemberFees } from "./pages/tables/MemberFees";
 import { Dashboard } from "./pages/Dashboard";
+import { GymNameProvider } from "./context/Gym";
 
 function App() {
   return (
@@ -18,46 +19,24 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/gym" element={<Layout children={<Gym />} />} />
-
           <Route
-            path="/gym/:gymId/menu"
-            element={<Layout children={<GymProfile />} />}
-          />
-
-          <Route
-            path="/gym/:gymId/programs"
+            path="/gym/:gymId/*"
             element={
-              <Layout children={<Programs /> } />
+              <GymNameProvider>
+                <Routes>
+                  <Route path="menu" element={<Layout children={<GymProfile />} />} />
+                  <Route path="programs" element={<Layout children={<Programs />} />} />
+                  <Route path="dashboard" element={<Layout children={<Dashboard />} />} />
+                  <Route path="batches/:id" element={<Layout children={<Batches />} />} />
+                  <Route path="feeCategories" element={<Layout children={<FeeCategories />} />} />
+                  <Route path="members/:id" element={<Layout children={<Members />} />} />
+                  <Route path="memberFees" element={<Layout children={<MemberFees />} />} />
+                </Routes>
+              </GymNameProvider>
             }
           />
-
-          {/* This will come later */}
-          <Route
-            path="/gym/:gymId/dashboard"
-            element={<Layout children={<Dashboard />} />}
-          />
-
-          <Route
-            path="/gym/:gymId/batches/:id"
-            element={<Layout children={<Batches />} />}
-          />
-          <Route
-            path="/gym/:gymId/feeCategories"
-            element={<Layout children={<FeeCategories />} />}
-          />
-          <Route
-            path="/gym/:gymId/members/:id"
-            element={<Layout children={<Members />} />}
-          />
-          <Route
-            path="/gym/:gymId/memberFees"
-            element={<Layout children={<MemberFees />} />}
-          />
-
           <Route path="/signin" element={<SignIn />} />
-
           <Route path="/payment" element={<Batches />} />
-
           <Route path="/test" element={<SignIn />} />
         </Routes>
       </BrowserRouter>
