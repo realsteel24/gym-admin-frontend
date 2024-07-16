@@ -5,10 +5,15 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { MemberFeesColumns } from "./columns/MemberFeesColumns";
 
 export const MemberFees = () => {
-  const { gymId } = useParams<{ gymId: string }>();
+  const { gymId, memberId } = useParams<{ gymId: string; memberId: string }>();
 
-  const { memberFeesLoading, memberFees } = useMemberFees({ gymId: gymId! });
+  const { memberFeesLoading, memberFees } = useMemberFees({
+    gymId: gymId!,
+    memberId: memberId ?? "all",
+  });
   const navigate = useNavigate();
+
+  const columns = MemberFeesColumns(navigate, gymId!);
 
   return (
     <div>
@@ -40,7 +45,7 @@ export const MemberFees = () => {
         ) : (
           <div className="relative overflow-x-auto border rounded-xl md:mx-8">
             <DataTable
-              columns={MemberFeesColumns}
+              columns={columns}
               data={memberFees.map((fee) => ({ ...fee, navigate }))}
             />
           </div>
@@ -50,6 +55,10 @@ export const MemberFees = () => {
   );
 };
 
-export const ViewMemberFees = (gymId: string, navigate: NavigateFunction) => {
-  navigate(`/gym/${gymId}/memberFees`);
+export const ViewMemberFees = (
+  gymId: string,
+  memberId: string,
+  navigate: NavigateFunction
+) => {
+  navigate(`/gym/${gymId}/memberFees/${memberId}`);
 };

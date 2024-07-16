@@ -30,7 +30,7 @@ function App() {
                   <Route path="batches/:id" element={<Layout children={<Batches />} />} />
                   <Route path="feeCategories" element={<Layout children={<FeeCategories />} />} />
                   <Route path="members/:id" element={<Layout children={<Members />} />} />
-                  <Route path="memberFees" element={<Layout children={<MemberFees />} />} />
+                  <Route path="memberFees/:memberId" element={<Layout children={<MemberFees />} />} />
                 </Routes>
               </GymNameProvider>
             }

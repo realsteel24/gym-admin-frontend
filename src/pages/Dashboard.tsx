@@ -30,12 +30,17 @@ import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
 import { MonthlyCollection } from "@/components/vizualizations/MonthlyCollection";
 import GenderPieChart from "@/components/vizualizations/GenderPieChart";
+import { GenderPie } from "@/components/vizualizations/GenderPie";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
-  const { memberFees, memberFeesLoading } = useMemberFees({ gymId: gymId! });
+  const { memberFees, memberFeesLoading } = useMemberFees({
+    gymId: gymId!,
+    memberId: "all",
+  });
   const { payments, paymentsLoading } = usePayments({ gymId: gymId! });
-  const { statusCount, statusCountLoading } = useStatusCount({ gymId: gymId! });
+  const { statusCount, statusCountLoading, newAdCount, newAdCountLoading } =
+    useStatusCount({ gymId: gymId! });
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -44,10 +49,7 @@ export function Dashboard() {
           <Card x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium flex">
-                Total Revenue
-                <p className="text-xs text-muted-foreground pl-2 flex-col flex justify-center">
-                  | Current month
-                </p>
+                Month Collection
               </CardTitle>
               <IndianRupee className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -92,10 +94,36 @@ export function Dashboard() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
+              {newAdCountLoading ? (
+                <div className="text-left pt-2 pl-4">
+                  <div role="status">
+                    <svg
+                      aria-hidden="true"
+                      className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      viewBox="0 0 100 101"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentFill"
+                      />
+                    </svg>
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="text-2xl font-bold">{newAdCount} </div>
+                  <p className="text-xs text-muted-foreground">
+                    +20.1% from last month
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
           <Card x-chunk="dashboard-01-chunk-2">
@@ -149,15 +177,15 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+        <div className="grid gap-4 md:gap-8 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+          <Card className="md:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-4">
                 <CardTitle>Transactions</CardTitle>
                 <CardDescription>Most recent transactions</CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
-                <Link to={`/gym/${gymId}/memberFees`}>
+                <Link to={`/gym/${gymId}/memberFees/all`}>
                   View All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
@@ -225,16 +253,28 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
-          <GenderPieChart memberFees={memberFees} />
 
-         
+          <div className="col-span-1 md:col-span-2">
+            <CardHeader>
+              <CardTitle>Gender Diversity</CardTitle>
+            </CardHeader>
+            <GenderPieChart memberFees={memberFees} />
+          </div>
 
-          <MonthlyCollection
-            memberFees={memberFees}
-            memberFeesLoading={memberFeesLoading}
-          />
+          <div className="col-span-1 md:col-span-2">
+            <CardHeader>
+              <CardTitle>Month-wise Collection</CardTitle>
+            </CardHeader>
+            <MonthlyCollection
+              memberFees={memberFees}
+              memberFeesLoading={memberFeesLoading}
+            />
+          </div>
 
-<Card x-chunk="dashboard-01-chunk-5">
+          <Card
+            x-chunk="dashboard-01-chunk-5 "
+            className="grid md:col-span-2 col-span-1"
+          >
             <CardHeader>
               <CardTitle>Recent Sales</CardTitle>
             </CardHeader>
@@ -311,6 +351,9 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
+          <div className="col-span-1">
+            <GenderPie memberFees={memberFees} />
+          </div>
         </div>
       </main>
     </div>

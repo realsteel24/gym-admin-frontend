@@ -124,6 +124,7 @@ export const CreateMember = () => {
               pickDate={(date) => setEnrollmentDate(date)}
               type="Calendar"
             />
+            
           </div>
         }
         button={

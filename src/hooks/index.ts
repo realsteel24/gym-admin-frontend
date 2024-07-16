@@ -102,6 +102,7 @@ export interface MemberFeeOptions {
   paidDate: string;
   dueDate: string;
   status: string;
+  memberId: string;
   FeeCategory: { description: true; frequency: true };
   Payments: { 0: { amount: true } };
   Member: {
@@ -312,7 +313,13 @@ export const useMemberPrograms = ({ gymId }: { gymId: string }) => {
   };
 };
 
-export const useMemberFees = ({ gymId }: { gymId: string }) => {
+export const useMemberFees = ({
+  gymId,
+  memberId,
+}: {
+  gymId: string;
+  memberId?: string;
+}) => {
   const [memberFeesLoading, setMemberFeesLoading] = useState(true);
   const [memberFees, setMemberFees] = useState<MemberFeeOptions[]>([]);
 
@@ -320,7 +327,7 @@ export const useMemberFees = ({ gymId }: { gymId: string }) => {
     const fetchMemberFees = async () => {
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/${gymId}/memberFees`,
+          `${BACKEND_URL}/api/v1/admin/${gymId}/memberFees/${memberId}`,
           {
             headers: { authorization: localStorage.getItem("token") ?? "" },
           }
@@ -339,7 +346,7 @@ export const useMemberFees = ({ gymId }: { gymId: string }) => {
     };
 
     fetchMemberFees();
-  }, [gymId]);
+  }, [gymId, memberId]);
 
   return {
     memberFees,
@@ -383,7 +390,9 @@ export const usePayments = ({ gymId }: { gymId: string }) => {
 };
 export const useStatusCount = ({ gymId }: { gymId: string }) => {
   const [statusCountLoading, setStatusCountLoading] = useState(true);
+  const [newAdCountLoading, setNewAdCountLoading] = useState(true);
   const [statusCount, setStatusCount] = useState(0);
+  const [newAdCount, setNewAdCount] = useState(0);
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -398,12 +407,14 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
           throw new Error("Something went wrong");
         }
         const result = await response.json();
-        setStatusCount(result.count.status);
+        setStatusCount(result.defaultersCount.status);
+        setNewAdCount(result.newAdCount.description);
         console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
       } finally {
         setStatusCountLoading(false);
+        setNewAdCountLoading(false);
       }
     };
 
@@ -412,7 +423,9 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
 
   return {
     statusCount,
+    newAdCount,
     statusCountLoading,
+    newAdCountLoading
   };
 };
 

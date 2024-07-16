@@ -7,7 +7,9 @@ interface GenderPieChartProps {
 }
 
 const GenderPieChart: React.FC<GenderPieChartProps> = ({ memberFees }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
+    const chartRef = useRef<HTMLDivElement>(null);
+    const chartInstanceRef = useRef<echarts.ECharts | null>(null);
+
 
   useEffect(() => {
     if (chartRef.current && memberFees) {
@@ -29,47 +31,46 @@ const GenderPieChart: React.FC<GenderPieChartProps> = ({ memberFees }) => {
       }));
 
       // Initialize ECharts instance
-      const chart = echarts.init(chartRef.current);
+        const chart = echarts.init(chartRef.current);
+        chartInstanceRef.current = chart; // Store instance in ref
+
 
       // Set up pie chart options
       const option = {
-        title: {
-          text: "Gender Distribution",
-          subtext: "Based on Members",
-          left: "center",
-          textStyle: {
-            fontSize: 16,
-            color: localStorage.getItem("darkMode") === "true" ? "White" : "Black",
-          },
-        },
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b}: {c} ({d}%)",
         },
         legend: {
-          orient: "vertical",
+          orient: "horizontal",
           left: "right",
-          top: "center",
+          top: "bottom",
           textStyle: {
-            color: localStorage.getItem("darkMode") === "true" ? "White" : "Black",
+            color:
+              localStorage.getItem("darkMode") === "true" ? "White" : "Black",
           },
           data: genderData.map((item) => item.name),
         },
         series: [
           {
+            
             name: "Gender",
             type: "pie",
-            radius: ["50%", "70%"],
+            radius: ["40%", "60%"],
             avoidLabelOverlap: false,
+            right: "20%",
+            left: "20%",
+            
             label: {
               show: true,
               position: "outside",
-              formatter: "{d}%",
+              formatter: " {d}%",
+                fontWeight: "bold",
             },
             emphasis: {
               label: {
                 show: true,
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: "bold",
               },
             },
@@ -83,21 +84,24 @@ const GenderPieChart: React.FC<GenderPieChartProps> = ({ memberFees }) => {
 
       // Set chart options and resize on window resize
       chart.setOption(option);
-      window.addEventListener("resize", () => {
-        chart.resize();
-      });
-
+      const handleResize = () => {
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.resize();
+        }
+      };
+      window.addEventListener("resize", handleResize);
       // Clean up ECharts instance on component unmount
       return () => {
-        chart.dispose();
-        window.removeEventListener("resize", () => {
-          chart.resize();
-        });
-      };
-    }
+        if (chartInstanceRef.current) {
+            chartInstanceRef.current.dispose();
+            chartInstanceRef.current = null; // Clear instance from ref
+          }
+          window.removeEventListener("resize", handleResize);
+        };
+      }
   }, [memberFees]);
 
-  return <div ref={chartRef} style={{ width: "100%", height: "400px" }} />;
+  return <div className="grid md:col-span-1" ref={chartRef} style={{ width: "100%", height: "400px"}} />;
 };
 
 export default GenderPieChart;

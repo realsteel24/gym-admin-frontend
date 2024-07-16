@@ -4,15 +4,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
-import {
-  FeeOptions,
-  MemberOptions,
-  useFeeCategories,
-  useMembers,
-} from "@/hooks";
+import { FeeOptions, useFeeCategories } from "@/hooks";
 import { Label } from "../ui/label";
-import Select from "react-select";
 import { useToast } from "../ui/use-toast";
+import SelectMember from "../SelectMembers";
 
 type Frequency =
   | "monthly"
@@ -40,11 +35,7 @@ export const CreateMemberFee = () => {
   const [paidDate, setPaidDate] = useState<Date>(new Date());
   const [dueDate, setDueDate] = useState<Date>(addMonths(new Date(), 1));
   const [remarks, setRemarks] = useState("Success");
-  const [memberList, setMemberList] = useState<MemberOptions[]>([]);
-  const { members, loading, dummy, render } = useMembers({
-    gymId: gymId!,
-    id: "all",
-  });
+
   const { toast } = useToast();
 
   const clear = () => {
@@ -55,12 +46,6 @@ export const CreateMemberFee = () => {
     setIsDialogOpen(false);
     setError("");
   };
-
-  useEffect(() => {
-    if (!loading && members) {
-      setMemberList(members);
-    }
-  }, [loading, members, dummy]);
 
   useEffect(() => {
     if (!feeCategoryLoading && feeCategories) {
@@ -88,7 +73,8 @@ export const CreateMemberFee = () => {
       halfYearly: 6,
       yearly: 12,
     };
-    const monthsToAdd = frequencies[frequency.toLowerCase() as Frequency] || 240;
+    const monthsToAdd =
+      frequencies[frequency.toLowerCase() as Frequency] || 240;
     return addMonths(startDate, monthsToAdd);
   };
 
@@ -132,19 +118,14 @@ export const CreateMemberFee = () => {
       }
     }
   }
-  const memberOptions = memberList.map((member) => ({
-    value: member.Members[0].id,
-    label: member.name,
-  }));
 
-  const handleMemberChange = (selectedOption: any) => {
-    setMemberId(selectedOption ? selectedOption.value : "");
+  const handleMemberSelect = (selectedMemberId: string) => {
+    setMemberId(selectedMemberId);
   };
 
   return (
     <div>
       <CustomDialogForm
-        fn={() => render((prev) => prev + 1)}
         isOpen={isDialogOpen}
         setIsOpen={() => {
           setIsDialogOpen(!isDialogOpen);
@@ -158,18 +139,14 @@ export const CreateMemberFee = () => {
         children={
           <div>
             <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label htmlFor="members"  className="text-right">
+              <Label htmlFor="members" className="text-right">
                 Member
               </Label>
-              <Select
+              <SelectMember
+                gymId={gymId!}
+                className="col-span-3"
                 id="members"
-                value={memberOptions.find(
-                  (option) => option.value === memberId
-                )}
-                onChange={handleMemberChange}
-                options={memberOptions}
-                className="col-span-3 dark:bg-black"
-                classNamePrefix="react-select dark:bg-black"
+                onSelect={handleMemberSelect}
               />
             </div>
 

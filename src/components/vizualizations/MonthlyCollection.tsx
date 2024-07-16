@@ -55,16 +55,7 @@ export const MonthlyCollection = ({
       });
 
       const option = {
-        title: {
-          text: "Monthly Collection",
-          subtext: "2024",
-          left: "center",
-          textStyle: {
-            fontSize: 16,
-            color:
-              localStorage.getItem("darkMode") === "true" ? "White" : "Black",
-          },
-        },
+        
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -75,26 +66,41 @@ export const MonthlyCollection = ({
             return `${params[0].name}: ${payment}`;
           },
         },
-        xAxis: {
-          type: "category",
-          data: months,
+          xAxis: {
+              type: "category",
+              data: months,
           axisLabel: {
             interval: "auto", // Display all labels
-          },
+           
+            },
+          
         },
         yAxis: {
-          type: "value",
-        },
+            type: "value",
+            axisLabel: {
+                align: "left",
+            
+            },
+            offset: 20
+          },
         series: [
           {
             data: months.map((month) => ({
               name: month,
-              value: paymentsByMonth[month],
+                value: paymentsByMonth[month],
+            
             })),
-            type: "bar",
-            color: "#AAFF00",
+                type: "bar",
+            barWidth: "60%",
+                color: "#AAFF00",
+               
+            
           },
-        ],
+          ],
+          grid: {
+              right: "5%",
+            left: "10%"
+        }
       };
       chartRef.current.setOption(option);
     }
@@ -103,8 +109,8 @@ export const MonthlyCollection = ({
   return (
     <div
       id="main"
-      style={{ width: "100%", height: "400px" }}
-      className="col-span-1 md:col-span-2 w-full flex justify-center mt-4"
+      style={{ width: "100%", height: "400px"}}
+      className="col-span-1 md:col-span-3 mt-4"
     ></div>
   );
 };

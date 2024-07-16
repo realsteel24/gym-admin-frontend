@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { MemberFeeOptions } from "@/hooks";
+import { ColumnDef } from "@tanstack/react-table";
 import dateFormat from "dateformat";
+import { NavigateFunction } from "react-router-dom";
+import { ViewMemberFees } from "../MemberFees";
 
 const checkAndUpdateStatus = (dueDate: string, status: string) => {
   const today = new Date();
@@ -12,7 +15,10 @@ const checkAndUpdateStatus = (dueDate: string, status: string) => {
   return status;
 };
 
-export const MemberFeesColumns = [
+export const MemberFeesColumns = (
+  navigate: NavigateFunction,
+  gymId: string,
+): ColumnDef<MemberFeeOptions>[] => [
   {
     accessorKey: "Member.User.name",
     header: "Name",
@@ -64,10 +70,17 @@ export const MemberFeesColumns = [
   },
   {
     header: "Action",
-    cell: () => (
-      <Button onClick={() => {}} size={"sm"} variant={"outline"}>
+
+    cell: ({ row }) => (
+      <Button
+        variant={"outline"}
+        onClick={() => ViewMemberFees( gymId, row.original.memberId, navigate)}
+        size={"sm"}
+      >
         View Payment Details
       </Button>
     ),
   },
 ];
+
+

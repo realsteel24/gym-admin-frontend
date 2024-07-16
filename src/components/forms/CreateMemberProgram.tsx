@@ -4,17 +4,15 @@ import { Label } from "@/components/ui/label";
 import { BACKEND_URL } from "@/config";
 import {
   BatchOptions,
-  MemberOptions,
   ProgramsOptions,
   useBatches,
-  useMembers,
   usePrograms,
 } from "@/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
-import Select from "react-select";
 import { useToast } from "../ui/use-toast";
+import SelectMember from "../SelectMembers";
 
 export const CreateMemberProgram = () => {
   const { gymId } = useParams<{ gymId: string }>();
@@ -24,26 +22,17 @@ export const CreateMemberProgram = () => {
     gymId: gymId!,
   });
   const { batches } = useBatches({ gymId: gymId!, id: programId });
-  const { members, loading, dummy, render } = useMembers({
-    gymId: gymId!,
-    id: "all",
-  });
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addMonths(new Date(), 36));
   const [batchId, setBatchId] = useState("");
   const [batchList, setBatchList] = useState<BatchOptions[]>([]);
-  const [memberList, setMemberList] = useState<MemberOptions[]>([]);
   const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!loading && members) {
-      setMemberList(members);
-    }
-  }, [loading, members, dummy]);
+
 
   useEffect(() => {
     if (!programLoading && programs) {
@@ -104,23 +93,13 @@ export const CreateMemberProgram = () => {
     }
   }
 
-  const memberOptions = memberList
-    .filter(
-      (member) => Array.isArray(member.Members) && member.Members.length > 0
-    )
-    .map((member) => ({
-      value: member.Members[0].id,
-      label: member.name,
-    }));
-
-  const handleMemberChange = (selectedOption: any) => {
-    setMemberId(selectedOption ? selectedOption.value : "");
+  const handleMemberChange = (selectedOption: string) => {
+    setMemberId(selectedOption);
   };
 
   return (
     <div>
       <CustomDialogForm
-        fn={() => render((prev) => prev + 1)}
         isOpen={isDialogOpen}
         setIsOpen={() => {
           setIsDialogOpen(!isDialogOpen);
@@ -175,16 +154,13 @@ export const CreateMemberProgram = () => {
               <Label htmlFor="members" className="text-right">
                 Select Member
               </Label>
-              <Select
-                id="members"
-                value={memberOptions.find(
-                  (option) => option.value === memberId
-                )}
-                onChange={handleMemberChange}
-                options={memberOptions}
+              <SelectMember
+                gymId={gymId!}
                 className="col-span-3"
-                classNamePrefix="react-select"
+                id="members"
+                onSelect={handleMemberChange}
               />
+              
             </div>
             <LabelledInput
               formId="Start"
