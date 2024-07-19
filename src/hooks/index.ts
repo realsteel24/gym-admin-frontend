@@ -408,7 +408,7 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
         }
         const result = await response.json();
         setStatusCount(result.defaultersCount.status);
-        setNewAdCount(result.newAdCount.description);
+        setNewAdCount(result.newAdCount.feeCategoryId);
         console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
@@ -425,7 +425,7 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
     statusCount,
     newAdCount,
     statusCountLoading,
-    newAdCountLoading
+    newAdCountLoading,
   };
 };
 

@@ -1,6 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dateFormat from "dateformat";
-import { Button } from "@/components/ui/button";
 import { MemberOptions } from "@/hooks";
 
 export const MemberColumns: ColumnDef<MemberOptions>[] = [
@@ -40,19 +39,5 @@ export const MemberColumns: ColumnDef<MemberOptions>[] = [
     header: "Birth Date",
     cell: ({ row }) =>
       row.original.dob ? dateFormat(row.original.dob, "dd/mm/yyyy") : "N/A",
-  },
-  {
-    header: "Action",
-    cell: ({ row }) => (
-      <Button
-        onClick={() => {
-          row.original.navigate(`/gym/${row.original.id}/menu`);
-        }}
-        size={"sm"}
-        variant={"outline"}
-      >
-        View Payments
-      </Button>
-    ),
   },
 ];

@@ -177,7 +177,7 @@ export function GymProfile() {
           </Button>
           <Button
             variant={"default"}
-            onClick={() => setActiveComponent("Payments")}
+            onClick={() => setActiveComponent("Payment")}
             className={`inline-flex items-center justify-center hover:font-bold whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 rounded-xl mr-2 ${
               activeComponent === "Payment"
                 ? "underline underline-offset-4 decoration-2"
@@ -189,7 +189,7 @@ export function GymProfile() {
 
           <Button
             variant={"default"}
-            onClick={() => setActiveComponent("Instructors")}
+            onClick={() => setActiveComponent("Instructor")}
             className={`inline-flex items-center justify-center hover:font-bold whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 rounded-xl mr-2 ${
               activeComponent === "Instructor"
                 ? "underline underline-offset-4 decoration-2"
