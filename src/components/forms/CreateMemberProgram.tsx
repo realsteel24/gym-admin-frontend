@@ -10,7 +10,7 @@ import {
 } from "@/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
-import { LabelledInput, addMonths } from "../LabelledInput";
+import { LabelledInput } from "../LabelledInput";
 import { useToast } from "../ui/use-toast";
 import SelectMember from "../SelectMembers";
 
@@ -23,7 +23,6 @@ export const CreateMemberProgram = () => {
   });
   const { batches } = useBatches({ gymId: gymId!, id: programId });
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addMonths(new Date(), 36));
   const [batchId, setBatchId] = useState("");
   const [batchList, setBatchList] = useState<BatchOptions[]>([]);
   const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
@@ -31,8 +30,6 @@ export const CreateMemberProgram = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
-
-
 
   useEffect(() => {
     if (!programLoading && programs) {
@@ -62,7 +59,6 @@ export const CreateMemberProgram = () => {
           method: "POST",
           body: JSON.stringify({
             startDate,
-            endDate,
             programId,
             batchId,
             memberId,
@@ -160,7 +156,6 @@ export const CreateMemberProgram = () => {
                 id="members"
                 onSelect={handleMemberChange}
               />
-              
             </div>
             <LabelledInput
               formId="Start"
@@ -171,7 +166,7 @@ export const CreateMemberProgram = () => {
               pickDate={(date) => setStartDate(date)}
               type="Calendar"
             />
-            <LabelledInput
+            {/* <LabelledInput
               formId="End"
               formName="End"
               label="End Date"
@@ -179,7 +174,7 @@ export const CreateMemberProgram = () => {
               selectedDate={endDate}
               pickDate={(date) => setEndDate(date)}
               type="Calendar"
-            />
+            /> */}
           </div>
         }
         button={

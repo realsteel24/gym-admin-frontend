@@ -30,7 +30,7 @@ export interface MemberOptions {
 export interface GymOptions {
   id: string;
   name: string;
-  branch: string;
+  branch: string; 
   address: string;
   website: string;
   operationalHours: string;

@@ -58,7 +58,7 @@ const SelectMember: React.FC<SelectMemberProps> = ({
   const debouncedFetchMembers = useCallback(
     debounce((search: string) => {
       fetchMembers(search);
-    }, 500),
+    }, 800),
     [gymId]
   );
 
