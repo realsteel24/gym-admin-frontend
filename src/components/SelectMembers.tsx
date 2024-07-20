@@ -67,10 +67,12 @@ const SelectMember: React.FC<SelectMemberProps> = ({
     debouncedFetchMembers(search);
   }, [ debouncedFetchMembers]);
 
-  const memberOptions = members.map((member) => ({
-    value: member.Members[0].id,
-    label: member.name,
-  }));
+  const memberOptions = members
+    .filter((member) => member.Members && member.Members.length > 0) // Filter out members without the expected structure
+    .map((member) => ({
+      value: member.Members[0].id,
+      label: member.name,
+    }));
 
   const customStyles = {
     control: (provided: any, state: any) => ({
