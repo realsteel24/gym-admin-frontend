@@ -22,8 +22,6 @@ export const Members = () => {
   });
   const navigate = useNavigate();
   const rowsPerPage = 10;
-  const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
   const formattedMembers = members.map((item) => {
