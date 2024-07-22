@@ -3,6 +3,16 @@ import { Skeleton } from "@/components/Skeleton";
 import { useMembers } from "@/hooks";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { MemberColumns } from "./columns/MemberColumns";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useState } from "react";
 
 export const Members = () => {
   const { gymId, id } = useParams<{ gymId: string; id: string }>();
@@ -11,6 +21,10 @@ export const Members = () => {
     id: id ?? "all",
   });
   const navigate = useNavigate();
+  const rowsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(rowsPerPage);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const formattedMembers = members.map((item) => {
     const memberDetail = item.Members[0];
@@ -28,7 +42,16 @@ export const Members = () => {
       dob,
     };
   });
-
+  console.log(Math.round(formattedMembers.length));
+  const totalPages = Math.ceil(formattedMembers.length / rowsPerPage);
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return formattedMembers.slice(startIndex, endIndex);
+  };
+  const handlePageChange = (PageNumber: number) => {
+    setCurrentPage(PageNumber);
+  };
   return (
     <div>
       <svg
@@ -57,9 +80,49 @@ export const Members = () => {
         </div>
       ) : (
         <div className="relative overflow-x-auto border rounded-xl md:mx-8">
-          <DataTable columns={MemberColumns} data={formattedMembers} />
+          <DataTable columns={MemberColumns} data={getPaginatedData()} />
         </div>
       )}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              className={
+                currentPage === 1 ? "pointer-events-none opacity-50" : undefined
+              }
+              onClick={() => {
+                handlePageChange(currentPage - 1);
+              }}
+            />
+          </PaginationItem>
+
+          {[...Array(totalPages).keys()].map((page) => (
+            <PaginationItem key={page + 1}>
+              <PaginationLink
+                className={currentPage === page + 1 ? "active" : undefined}
+                onClick={() => handlePageChange(page + 1)}
+              >
+                {page + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              className={
+                currentPage === totalPages
+                  ? "pointer-events-none opacity-50"
+                  : undefined
+              }
+              onClick={() => {
+                handlePageChange(currentPage + 1);
+              }}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

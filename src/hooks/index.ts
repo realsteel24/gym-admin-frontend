@@ -9,6 +9,7 @@ export interface MemberOptions {
   contact: string;
   gender: string;
   Members: {
+    length: number;
     0: {
       id: string;
       enrollmentDate: string;
@@ -20,7 +21,7 @@ export interface MemberOptions {
           programId: string;
           batchId: string;
           Batch: { name: string };
-        };
+        }
       };
     };
   };

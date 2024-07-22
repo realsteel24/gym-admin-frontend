@@ -32,6 +32,7 @@ export const CustomDialogForm = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+
       <DialogTrigger asChild>
         <Button onClick={fn} variant={"outline"}>
           {titleButton}

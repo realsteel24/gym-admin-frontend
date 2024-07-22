@@ -18,7 +18,7 @@ const SelectMember: React.FC<SelectMemberProps> = ({
   className,
   id,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [members, setMembers] = useState<MemberOptions[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -49,7 +49,7 @@ const SelectMember: React.FC<SelectMemberProps> = ({
       }
     } catch (error) {
       console.error("Error fetching members:", error);
-      setMembers([]); // Ensure members is always defined
+      setMembers([]);
     } finally {
       setLoading(false);
     }
@@ -65,10 +65,10 @@ const SelectMember: React.FC<SelectMemberProps> = ({
   useEffect(() => {
     const search = searchParams.get("search") || "";
     debouncedFetchMembers(search);
-  }, [ debouncedFetchMembers]);
+  }, [debouncedFetchMembers]);
 
   const memberOptions = members
-    .filter((member) => member.Members && member.Members.length > 0) // Filter out members without the expected structure
+    .filter((member) => member.Members && member.Members.length > 0)
     .map((member) => ({
       value: member.Members[0].id,
       label: member.name,
@@ -123,7 +123,6 @@ const SelectMember: React.FC<SelectMemberProps> = ({
         }
       }}
       placeholder="Select Member..."
-
     />
   );
 };

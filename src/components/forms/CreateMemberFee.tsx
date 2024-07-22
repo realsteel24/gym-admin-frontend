@@ -30,7 +30,7 @@ export const CreateMemberFee = () => {
   const [feeCategoriesList, setFeeCategoriesList] = useState<FeeOptions[]>([]);
   const [memberId, setMemberId] = useState("");
   const [feeCategoryId, setFeeCategoryId] = useState("");
-  const [selectedAmount, setSelectedAmount] = useState(0);
+  const [selectedAmount, setSelectedAmount] = useState(1500);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paidDate, setPaidDate] = useState<Date>(new Date());
   const [dueDate, setDueDate] = useState<Date>(addMonths(new Date(), 1));
@@ -39,6 +39,7 @@ export const CreateMemberFee = () => {
   const { toast } = useToast();
 
   const clear = () => {
+    setFeeCategoryId("")
     setMemberId("");
     setRemarks("");
     setPaymentMethod("");
@@ -129,8 +130,9 @@ export const CreateMemberFee = () => {
         isOpen={isDialogOpen}
         setIsOpen={() => {
           setIsDialogOpen(!isDialogOpen);
-          if (!isDialogOpen) {
-            fetchCategories();
+          fetchCategories();
+          if (isDialogOpen === true) {
+            clear()
           }
         }}
         FormTitle="Record a Payment"
