@@ -16,13 +16,16 @@ import { useState } from "react";
 
 export const Members = () => {
   const { gymId, id } = useParams<{ gymId: string; id: string }>();
-  const { members, loading } = useMembers({
-    gymId: gymId!,
-    id: id ?? "all",
-  });
-  const navigate = useNavigate();
   const rowsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const { members, loading, dataCount } = useMembers({
+    gymId: gymId!,
+    id: id ?? "all",
+    page: currentPage,
+    rowsPerPage: rowsPerPage,
+  });
+  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
 
   const formattedMembers = members.map((item) => {
     const memberDetail = item.Members[0];
@@ -40,15 +43,12 @@ export const Members = () => {
       dob,
     };
   });
+
   console.log(Math.round(formattedMembers.length));
-  const totalPages = Math.ceil(formattedMembers.length / rowsPerPage);
-  const getPaginatedData = () => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return formattedMembers.slice(startIndex, endIndex);
-  };
-  const handlePageChange = (PageNumber: number) => {
-    setCurrentPage(PageNumber);
+  const totalPages = Math.ceil(dataCount / rowsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
   return (
     <div>
@@ -78,7 +78,7 @@ export const Members = () => {
         </div>
       ) : (
         <div className="relative overflow-x-auto border rounded-xl md:mx-8">
-          <DataTable columns={MemberColumns} data={getPaginatedData()} />
+          <DataTable columns={MemberColumns} data={formattedMembers} />
         </div>
       )}
       <Pagination>
@@ -94,18 +94,23 @@ export const Members = () => {
             />
           </PaginationItem>
 
-          {[...Array(totalPages).keys()].map((page) => (
-            <PaginationItem key={page + 1}>
-              <PaginationLink
-                className={currentPage === page + 1 ? "active" : undefined}
-                onClick={() => handlePageChange(page + 1)}
-              >
-                {page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+          {show === true
+            ? [...Array(totalPages).keys()].map((page) => (
+                <PaginationItem key={page + 1}>
+                  <PaginationLink
+                    className={currentPage === page + 1 ? "active" : undefined}
+                    onClick={() => handlePageChange(page + 1)}
+                  >
+                    {page + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))
+            : null}
           <PaginationItem>
-            <PaginationEllipsis />
+            <PaginationEllipsis
+              className={totalPages > 5 ? "visible" : "hidden"}
+              onClick={() => setShow(!show)}
+            />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext

@@ -12,6 +12,7 @@ import { Members } from "./pages/tables/Members";
 import { MemberFees } from "./pages/tables/MemberFees";
 import { Dashboard } from "./pages/Dashboard";
 import { GymNameProvider } from "./context/Gym";
+import { TransactionHistory } from "./pages/tables/TransactionHistory";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                   <Route path="feeCategories" element={<Layout children={<FeeCategories />} />} />
                   <Route path="members/:id" element={<Layout children={<Members />} />} />
                   <Route path="memberFees/:memberId" element={<Layout children={<MemberFees />} />} />
+                  <Route path="transactionHistory/:memberId" element={<Layout children={<TransactionHistory />} />} />
                 </Routes>
               </GymNameProvider>
             }

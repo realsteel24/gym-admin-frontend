@@ -21,7 +21,7 @@ export interface MemberOptions {
           programId: string;
           batchId: string;
           Batch: { name: string };
-        }
+        };
       };
     };
   };
@@ -31,7 +31,7 @@ export interface MemberOptions {
 export interface GymOptions {
   id: string;
   name: string;
-  branch: string; 
+  branch: string;
   address: string;
   website: string;
   operationalHours: string;
@@ -117,17 +117,27 @@ export interface MemberFeeOptions {
   };
 }
 
-export const useMembers = ({ gymId, id }: { gymId: string; id: string }) => {
+export const useMembers = ({
+  gymId,
+  id,
+  page,
+  rowsPerPage,
+}: {
+  gymId: string;
+  id: string;
+  page: number;
+  rowsPerPage: number;
+}) => {
   const [loading, setLoading] = useState(true);
-  const [dummy, render] = useState(0);
   const [members, setMembers] = useState<MemberOptions[]>([]);
+  const [dataCount, setDataCount] = useState(0);
 
   useEffect(() => {
     if (!gymId) return;
     const fetchMembers = async () => {
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/${gymId}/members/${id}`,
+          `${BACKEND_URL}/api/v1/admin/${gymId}/members/${id}?page=${page}&rowsPerPage=${rowsPerPage}`,
           {
             headers: { authorization: localStorage.getItem("token") ?? "" },
           }
@@ -137,6 +147,7 @@ export const useMembers = ({ gymId, id }: { gymId: string; id: string }) => {
         }
         const result = await response.json();
         setMembers(result.data);
+        setDataCount(result.dataCount);
       } catch (error) {
         console.error("Error fetching members:", error);
       } finally {
@@ -145,13 +156,12 @@ export const useMembers = ({ gymId, id }: { gymId: string; id: string }) => {
     };
 
     fetchMembers();
-  }, [gymId, dummy]);
+  }, [gymId, id, page, rowsPerPage]);
 
   return {
     members,
     loading,
-    dummy,
-    render,
+    dataCount,
   };
 };
 
@@ -352,6 +362,49 @@ export const useMemberFees = ({
   return {
     memberFees,
     memberFeesLoading,
+  };
+};
+export const useTransactionHistory = ({
+  gymId,
+  memberId,
+}: {
+  gymId: string;
+  memberId?: string;
+}) => {
+  const [transactionHistoryLoading, setTransactionHistoryLoading] =
+    useState(true);
+  const [transactionHistory, setTransactionHistory] = useState<
+    MemberFeeOptions[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTransactionHistory = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/api/v1/admin/${gymId}/transactionHistory/${memberId}`,
+          {
+            headers: { authorization: localStorage.getItem("token") ?? "" },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const result = await response.json();
+        setTransactionHistory(result.memberFees);
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      } finally {
+        setTransactionHistoryLoading(false);
+      }
+    };
+
+    fetchTransactionHistory();
+  }, [gymId, memberId]);
+
+  return {
+    transactionHistory,
+    transactionHistoryLoading,
   };
 };
 
