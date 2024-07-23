@@ -25,14 +25,38 @@ function App() {
             element={
               <GymNameProvider>
                 <Routes>
-                  <Route path="menu" element={<Layout children={<GymProfile />} />} />
-                  <Route path="programs" element={<Layout children={<Programs />} />} />
-                  <Route path="dashboard" element={<Layout children={<Dashboard />} />} />
-                  <Route path="batches/:id" element={<Layout children={<Batches />} />} />
-                  <Route path="feeCategories" element={<Layout children={<FeeCategories />} />} />
-                  <Route path="members/:id" element={<Layout children={<Members />} />} />
-                  <Route path="memberFees/:memberId" element={<Layout children={<MemberFees />} />} />
-                  <Route path="transactionHistory/:memberId" element={<Layout children={<TransactionHistory />} />} />
+                  <Route
+                    path="menu"
+                    element={<Layout children={<GymProfile />} />}
+                  />
+                  <Route
+                    path="programs"
+                    element={<Layout children={<Programs />} />}
+                  />
+                  <Route
+                    path="dashboard"
+                    element={<Layout children={<Dashboard />} />}
+                  />
+                  <Route
+                    path="batches/:id"
+                    element={<Layout children={<Batches />} />}
+                  />
+                  <Route
+                    path="feeCategories"
+                    element={<Layout children={<FeeCategories />} />}
+                  />
+                  <Route
+                    path="members/:id"
+                    element={<Layout children={<Members />} />}
+                  />
+                  <Route
+                    path="memberFees/:memberId"
+                    element={<Layout children={<MemberFees />} />}
+                  />
+                  <Route
+                    path="transactionHistory/:memberId"
+                    element={<Layout children={<TransactionHistory />} />}
+                  />
                 </Routes>
               </GymNameProvider>
             }

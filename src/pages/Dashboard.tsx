@@ -193,7 +193,7 @@ export function Dashboard() {
                 <CardDescription>Most recent transactions</CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
-                <Link to={`/gym/${gymId}/memberFees/test/all`}>
+                <Link to={`/gym/${gymId}/transactionHistory/all`}>
                   View All
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
