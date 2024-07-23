@@ -1,8 +1,8 @@
 import { MemberFeeOptions } from "@/hooks";
+import { ColumnDef } from "@tanstack/react-table";
 import dateFormat from "dateformat";
 
-export const TransactionHistoryColumn = (
-) => [
+export const TransactionHistoryColumn = (): ColumnDef<MemberFeeOptions>[] => [
   {
     accessorKey: "Member.User.name",
     header: "Name",
@@ -17,6 +17,14 @@ export const TransactionHistoryColumn = (
     cell: ({ row }: { row: { original: MemberFeeOptions } }) => {
       const amount = row.original.Payments?.[0]?.amount ?? "N/A";
       return amount;
+    },
+  },
+  {
+    accessorKey: "Payments",
+    header: "Payment Method",
+    cell: ({ row }: { row: { original: MemberFeeOptions } }) => {
+      const method = row.original.Payments?.[0]?.paymentMethod ?? "N/A";
+      return method;
     },
   },
   {
@@ -35,5 +43,4 @@ export const TransactionHistoryColumn = (
       return dateFormat(dueDate, "dd/mm/yyyy");
     },
   },
-
 ];

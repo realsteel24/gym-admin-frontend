@@ -105,7 +105,7 @@ export interface MemberFeeOptions {
   status: string;
   memberId: string;
   FeeCategory: { description: true; frequency: true };
-  Payments: { 0: { amount: true } };
+  Payments: { 0: { amount: true; paymentMethod: true } };
   Member: {
     User: { name: string; contact: string; gender: string };
     MemberPrograms: {
@@ -364,6 +364,7 @@ export const useMemberFees = ({
     memberFeesLoading,
   };
 };
+
 export const useTransactionHistory = ({
   gymId,
   memberId,

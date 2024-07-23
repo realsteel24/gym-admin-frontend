@@ -60,5 +60,5 @@ export const ViewMemberFees = (
   memberId: string,
   navigate: NavigateFunction
 ) => {
-  navigate(`/gym/${gymId}/memberFees/${memberId}`);
+  navigate(`/gym/${gymId}/transactionHistory/${memberId}`);
 };

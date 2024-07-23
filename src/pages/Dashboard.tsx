@@ -279,10 +279,7 @@ export function Dashboard() {
             />
           </div>
 
-          <Card
-            x-chunk="dashboard-01-chunk-5 "
-            className="grid md:col-span-2 col-span-1"
-          >
+          <Card className="md:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-4">
                 <CardTitle>Membership status</CardTitle>

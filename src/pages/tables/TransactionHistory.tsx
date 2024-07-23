@@ -1,16 +1,17 @@
 import { DataTable } from "@/components/Data-table";
 import { Skeleton } from "@/components/Skeleton";
-import { useMemberFees } from "@/hooks";
+import { useTransactionHistory } from "@/hooks";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { TransactionHistoryColumn } from "./columns/TransactionHistoryColumn";
 
 export const TransactionHistory = () => {
   const { gymId, memberId } = useParams<{ gymId: string; memberId: string }>();
 
-  const { memberFeesLoading, memberFees } = useMemberFees({
-    gymId: gymId!,
-    memberId: memberId ?? "all",
-  });
+  const { transactionHistoryLoading, transactionHistory } =
+    useTransactionHistory({
+      gymId: gymId!,
+      memberId: memberId ?? "all",
+    });
   const navigate = useNavigate();
 
   const columns = TransactionHistoryColumn();
@@ -37,7 +38,7 @@ export const TransactionHistory = () => {
         Transaction History
       </div>
       <div>
-        {memberFeesLoading ? (
+        {transactionHistoryLoading ? (
           <div className="md:mx-8">
             <Skeleton />
             <Skeleton />
@@ -46,7 +47,7 @@ export const TransactionHistory = () => {
           <div className="relative overflow-x-auto border rounded-xl md:mx-8">
             <DataTable
               columns={columns}
-              data={memberFees.map((fee) => ({ ...fee, navigate }))}
+              data={transactionHistory.map((fee) => ({ ...fee, navigate }))}
             />
           </div>
         )}
