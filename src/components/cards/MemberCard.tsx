@@ -4,10 +4,10 @@ import { ViewMembers } from "@/pages/tables/Members";
 import { CardMenu } from "../CardMenu";
 import { CreateMemberProgram } from "../forms/CreateMemberProgram";
 import { CreateMemberFee } from "../forms/CreateMemberFee";
-import { ViewMemberFees } from "@/pages/tables/MemberFees";
+import { ViewMemberships } from "@/pages/tables/MemberFees";
 
 export function MemberCard() {
-  const { gymId, id, memberId } = useParams<{
+  const { gymId, id } = useParams<{
     gymId: string;
     id: string;
     memberId?: string;
@@ -34,9 +34,7 @@ export function MemberCard() {
       <CardMenu
         cardTitle="Manage Memberships"
         type="buttonedCard"
-        cardFunction={() =>
-          ViewMemberFees(gymId ?? "", memberId ?? "all", navigate)
-        }
+        cardFunction={() => ViewMemberships(gymId ?? "", navigate)}
         buttonTitle="View Status"
       />
       <CardMenu

@@ -62,3 +62,7 @@ export const ViewMemberFees = (
 ) => {
   navigate(`/gym/${gymId}/transactionHistory/${memberId}`);
 };
+
+export const ViewMemberships = (gymId: string, navigate: NavigateFunction) => {
+  navigate(`/gym/${gymId}/memberFees/all`);
+};

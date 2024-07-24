@@ -24,6 +24,7 @@ export const Members = () => {
     page: currentPage,
     rowsPerPage: rowsPerPage,
   });
+  
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -86,7 +87,7 @@ export const Members = () => {
           <PaginationItem>
             <PaginationPrevious
               className={
-                currentPage === 1 ? "pointer-events-none opacity-50" : undefined
+                currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
               }
               onClick={() => {
                 handlePageChange(currentPage - 1);
@@ -98,7 +99,7 @@ export const Members = () => {
             ? [...Array(totalPages).keys()].map((page) => (
                 <PaginationItem key={page + 1}>
                   <PaginationLink
-                    className={currentPage === page + 1 ? "active" : undefined}
+                    className={currentPage === page + 1 ? "active cursor-pointer" : "cursor-pointer"}
                     onClick={() => handlePageChange(page + 1)}
                   >
                     {page + 1}
@@ -117,7 +118,7 @@ export const Members = () => {
               className={
                 currentPage === totalPages
                   ? "pointer-events-none opacity-50"
-                  : undefined
+                  : "cursor-pointer"
               }
               onClick={() => {
                 handlePageChange(currentPage + 1);
