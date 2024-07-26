@@ -1,20 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { BACKEND_URL } from "@/config";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput, addMonths } from "../LabelledInput";
-import { FeeOptions, useFeeCategories } from "@/hooks";
-import { Label } from "../ui/label";
+import { useFeeCategories } from "@/hooks";
 import { useToast } from "../ui/use-toast";
-import SelectMember from "../SelectMembers";
-
-type Frequency =
-  | "monthly"
-  | "quarterly"
-  | "halfYearly"
-  | "yearly"
-  | "admission";
+import SelectMember from "../selectors/SelectMembers";
+import SelectPackage from "../selectors/SelectPackage";
 
 export const CreateMemberFee = () => {
   const navigate = useNavigate();
@@ -22,24 +15,23 @@ export const CreateMemberFee = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
 
-  const { feeCategories, feeCategoryLoading, fetchCategories } =
+  const { feeCategories, fetchCategories, feeCategoryLoading } =
     useFeeCategories({
       gymId: gymId!,
     });
 
-  const [feeCategoriesList, setFeeCategoriesList] = useState<FeeOptions[]>([]);
-  const [memberId, setMemberId] = useState("");
   const [feeCategoryId, setFeeCategoryId] = useState("");
-  const [selectedAmount, setSelectedAmount] = useState(1500);
+  const [selectedAmount, setSelectedAmount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paidDate, setPaidDate] = useState<Date>(new Date());
   const [dueDate, setDueDate] = useState<Date>(addMonths(new Date(), 1));
   const [remarks, setRemarks] = useState("Success");
+  const [memberId, setMemberId] = useState("");
 
   const { toast } = useToast();
 
   const clear = () => {
-    setFeeCategoryId("")
+    setFeeCategoryId("");
     setMemberId("");
     setRemarks("");
     setPaymentMethod("");
@@ -48,40 +40,9 @@ export const CreateMemberFee = () => {
     setError("");
   };
 
-  useEffect(() => {
-    if (!feeCategoryLoading && feeCategories) {
-      setFeeCategoriesList(feeCategories);
-    }
-  }, [feeCategoryLoading, feeCategories]);
-
-  const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategoryId = e.target.value;
-    setFeeCategoryId(selectedCategoryId);
-    const selectedCategory = feeCategoriesList.find(
-      (item) => item.id === selectedCategoryId
-    );
-    if (selectedCategory) {
-      setSelectedAmount(parseInt(selectedCategory.amount));
-      setDueDate(calculateDueDate(paidDate, selectedCategory.frequency));
-    }
-  };
-
-  const calculateDueDate = (startDate: Date, frequency: string): Date => {
-    const frequencies = {
-      admission: 0,
-      monthly: 1,
-      quarterly: 3,
-      halfYearly: 6,
-      yearly: 12,
-    };
-    const monthsToAdd =
-      frequencies[frequency.toLowerCase() as Frequency] || 240;
-    return addMonths(startDate, monthsToAdd);
-  };
-
-  async function handleSubmit() {
+  const handleSubmit = async () => {
     try {
-      const submit = await fetch(
+      const response = await fetch(
         `${BACKEND_URL}/api/v1/admin/${gymId}/memberFees`,
         {
           method: "POST",
@@ -100,28 +61,20 @@ export const CreateMemberFee = () => {
           },
         }
       );
-      if (!submit.ok) {
-        throw new Error("Failed to create batch");
+
+      if (!response.ok) {
+        throw new Error("Failed to create fee record");
       }
 
-      console.log("Member created successfully");
       toast({
-        title: "Payment recorded successfully",
+        title: `Payment of ${selectedAmount} recorded successfully`,
         description: "Success",
       });
       clear();
       navigate(`/gym/${gymId}/menu`);
     } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
-      } else {
-        setError("An unexpected error occurred");
-      }
+      setError(e instanceof Error ? e.message : "An unexpected error occurred");
     }
-  }
-
-  const handleMemberSelect = (selectedMemberId: string) => {
-    setMemberId(selectedMemberId);
   };
 
   return (
@@ -130,9 +83,10 @@ export const CreateMemberFee = () => {
         isOpen={isDialogOpen}
         setIsOpen={() => {
           setIsDialogOpen(!isDialogOpen);
-          fetchCategories();
-          if (isDialogOpen === true) {
-            clear()
+          if (isDialogOpen) {
+            clear();
+          } else {
+            fetchCategories();
           }
         }}
         FormTitle="Record a Payment"
@@ -140,36 +94,21 @@ export const CreateMemberFee = () => {
         titleButton="Add transaction"
         children={
           <div>
-            <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label htmlFor="members" className="text-right">
-                Member
-              </Label>
-              <SelectMember
-                gymId={gymId!}
-                className="col-span-3"
-                id="members"
-                onSelect={handleMemberSelect}
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4 pt-2">
-              <Label htmlFor="feeCategory" className="text-right">
-                Fee Category
-              </Label>
-              <select
-                id="feeCategory"
-                value={feeCategoryId}
-                onChange={handleSelectionChange}
-                className="col-span-3 dark:bg-black"
-              >
-                <option value="">Choose package</option>
-                {feeCategoriesList.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.description} - {item.frequency}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <SelectMember
+              gymId={gymId!}
+              id="members"
+              memberId={memberId}
+              setMemberId={setMemberId}
+            />
+            <SelectPackage
+              feeCategories={feeCategories}
+              feeCategoryLoading={feeCategoryLoading}
+              feeCategoryId={feeCategoryId}
+              setFeeCategoryId={setFeeCategoryId}
+              setSelectedAmount={setSelectedAmount}
+              setDueDate={setDueDate}
+              paidDate={paidDate}
+            />
             <LabelledInput
               formId="Amount"
               formName="Amount"
@@ -184,11 +123,11 @@ export const CreateMemberFee = () => {
               formId="date"
               formName="date"
               label="Payment Date"
-              placeholder={"Enter Date"}
+              placeholder="Enter Date"
               selectedDate={paidDate}
               pickDate={(date) => {
                 setPaidDate(date);
-                const selectedCategory = feeCategoriesList.find(
+                const selectedCategory = feeCategories.find(
                   (item) => item.id === feeCategoryId
                 );
                 if (selectedCategory) {
@@ -227,3 +166,16 @@ export const CreateMemberFee = () => {
     </div>
   );
 };
+
+function calculateDueDate(startDate: Date, frequency: string): Date {
+  const frequencies = {
+    admission: 0,
+    monthly: 1,
+    quarterly: 3,
+    halfYearly: 6,
+    yearly: 12,
+  };
+  const monthsToAdd =
+    frequencies[frequency.toLowerCase() as keyof typeof frequencies] || 240;
+  return addMonths(startDate, monthsToAdd);
+}

@@ -1,35 +1,23 @@
-import { Button } from "@/components/ui/button";
-
-import { Label } from "@/components/ui/label";
-import { BACKEND_URL } from "@/config";
-import { ProgramsOptions, usePrograms } from "@/hooks";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { BACKEND_URL } from "@/config";
 import { CustomDialogForm } from "../CustomDialogForm";
 import { LabelledInput } from "../LabelledInput";
 import { useToast } from "../ui/use-toast";
+import SelectPrograms from "../selectors/SelectPrograms";
 
-export const CreateBatch = () => {
+export const CreateBatch: React.FC = () => {
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState("8:00 PM");
   const [endTime, setEndTime] = useState("9:00 PM");
   const [days, setDays] = useState("Mon, Wed, Fri");
   const [programId, setProgramId] = useState("");
-  const [programsList, setProgramsList] = useState<ProgramsOptions[]>([]);
   const navigate = useNavigate();
   const { gymId } = useParams<{ gymId: string }>();
-  const { programLoading, programs, fetchPrograms } = usePrograms({
-    gymId: gymId!,
-  });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (!programLoading) {
-      setProgramsList(programs);
-    }
-  }, [programLoading, programs]);
 
   const clear = () => {
     setStartTime("");
@@ -75,39 +63,24 @@ export const CreateBatch = () => {
       } else setError("An unexpected error occurred");
     }
   }
+
   return (
     <div>
       <CustomDialogForm
         isOpen={isDialogOpen}
         setIsOpen={() => {
           setIsDialogOpen(!isDialogOpen);
-          if (!isDialogOpen) {
-            fetchPrograms();
-          }
         }}
         FormTitle="Create a Batch"
         FormDescription=" Please add all the necessary fields and click save"
         titleButton="Create Batch"
         children={
           <div>
-            <div className="grid grid-cols-4 items-center gap-4 ">
-              <Label htmlFor="program" className="text-right">
-                Select Program
-              </Label>
-              <select
-                id="program"
-                value={programId}
-                onChange={(e) => setProgramId(e.target.value)}
-                className="col-span-3 dark:bg-black"
-              >
-                <option value="">Choose Program</option>
-                {programsList.map((prog) => (
-                  <option key={prog.id} value={prog.id}>
-                    {prog.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <SelectPrograms
+              gymId={gymId!}
+              programId={programId}
+              setProgramId={setProgramId}
+            />
             <LabelledInput
               formId="Batch"
               formName="Batch"
@@ -151,3 +124,5 @@ export const CreateBatch = () => {
     </div>
   );
 };
+
+export default CreateBatch;

@@ -24,7 +24,7 @@ export const Members = () => {
     page: currentPage,
     rowsPerPage: rowsPerPage,
   });
-  
+
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -72,6 +72,8 @@ export const Members = () => {
       <div className="flex justify-center text-xl my-6 underline underline-offset-8 decoration-4 decoration-accent">
         Member Details
       </div>
+      <div className="flex justify-end m-4">search</div>
+
       {loading ? (
         <div className="md:mx-8">
           <Skeleton />
@@ -87,7 +89,9 @@ export const Members = () => {
           <PaginationItem>
             <PaginationPrevious
               className={
-                currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
+                currentPage === 1
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
               }
               onClick={() => {
                 handlePageChange(currentPage - 1);
@@ -99,7 +103,11 @@ export const Members = () => {
             ? [...Array(totalPages).keys()].map((page) => (
                 <PaginationItem key={page + 1}>
                   <PaginationLink
-                    className={currentPage === page + 1 ? "active cursor-pointer" : "cursor-pointer"}
+                    className={
+                      currentPage === page + 1
+                        ? "active cursor-pointer"
+                        : "cursor-pointer"
+                    }
                     onClick={() => handlePageChange(page + 1)}
                   >
                     {page + 1}
