@@ -78,10 +78,10 @@ export const MonthlyCollection = ({
         yAxis: {
             type: "value",
             axisLabel: {
-                align: "left",
+                align: "center",
             
             },
-            offset: 20
+            offset: 10
           },
         series: [
           {

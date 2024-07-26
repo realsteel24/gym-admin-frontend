@@ -32,7 +32,7 @@ const SelectPrograms: React.FC<SelectProgramProps> = ({
         Program
       </Label>
       <Select onValueChange={(value) => setProgramId(value)}>
-        <SelectTrigger className="w-[280px]" id={programId}>
+        <SelectTrigger className="col-span-3" id={programId}>
           <SelectValue placeholder="Choose Program" />
         </SelectTrigger>
         <SelectContent>

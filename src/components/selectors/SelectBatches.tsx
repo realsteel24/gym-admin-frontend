@@ -36,7 +36,7 @@ const SelectBatches: React.FC<SelectBatchProps> = ({
       </Label>
 
       <Select onValueChange={(value) => setBatchId(value)}>
-        <SelectTrigger className="w-[280px]" id={batchId}>
+        <SelectTrigger className="col-span-3" id={batchId}>
           <SelectValue placeholder="Choose Batch" />
         </SelectTrigger>
         <SelectContent>

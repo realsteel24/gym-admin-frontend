@@ -79,8 +79,8 @@ const SelectMember: React.FC<SelectMemberProps> = ({
       <Label htmlFor="members" className="text-right">
         Member
       </Label>
-      <Select onValueChange={(value) => setMemberId(value)}>
-        <SelectTrigger className={`w-[280px] `} id={memberId}>
+      <Select onValueChange={(value) => setMemberId(value)} >
+        <SelectTrigger className={`col-span-3`} id={memberId}>
           <SelectValue placeholder="Select Member" />
         </SelectTrigger>
         <SelectContent>

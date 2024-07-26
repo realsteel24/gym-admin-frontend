@@ -56,7 +56,7 @@ const SelectPackage: React.FC<SelectFeeCategoryProps> = ({
         Fee Category
       </Label>
       <Select onValueChange={handleSelectionChange}>
-        <SelectTrigger className="w-[280px]" id={feeCategoryId}>
+        <SelectTrigger className="col-span-3" id={feeCategoryId}>
           <SelectValue placeholder="Choose Package" />
         </SelectTrigger>
         <SelectContent>

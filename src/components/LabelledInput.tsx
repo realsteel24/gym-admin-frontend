@@ -55,7 +55,7 @@ export function LabelledInput({
             selected={selectedDate}
             onChange={pickDate!}
             dateFormat={"dd/MM/yyyy"}
-            className=" dark:bg-black p-2 text-sm rounded-md shadow-sm border"
+            className=" dark:bg-black p-2 text-sm rounded-md shadow-sm border col-span-3"
           />
         ) : (
           <Input
