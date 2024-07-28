@@ -62,6 +62,8 @@ const SelectPackage: React.FC<SelectFeeCategoryProps> = ({
         <SelectContent>
           {feeCategoryLoading ? (
             <div>Loading...</div>
+          ) : feeCategories.length === 0 ? (
+            <div className="text-sm opacity-80 p-1">No options available</div>
           ) : (
             feeCategories.map((fee: FeeOptions) => (
               <SelectItem key={fee.id} value={fee.id}>

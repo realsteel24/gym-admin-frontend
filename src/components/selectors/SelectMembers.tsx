@@ -26,8 +26,10 @@ const SelectMember: React.FC<SelectMemberProps> = ({
   setMemberId,
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>("");
+
   const [members, setMembers] = useState<MemberOptions[]>([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const fetchMembers = async (search: string) => {
     setLoading(true);
@@ -72,20 +74,41 @@ const SelectMember: React.FC<SelectMemberProps> = ({
   useEffect(() => {
     const search = searchParams.get("search") || "";
     debouncedFetchMembers(search);
-  }, [debouncedFetchMembers]);
+  }, [search, debouncedFetchMembers]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setSearchParams({ search: e.target.value });
+  };
 
   return (
     <div className="grid grid-cols-4 items-center gap-4 py-2">
       <Label htmlFor="members" className="text-right">
         Member
       </Label>
-      <Select onValueChange={(value) => setMemberId(value)} >
+      <Select
+        onValueChange={(value) => {
+          setMemberId(value);
+          setSearchParams("");
+        }}
+      >
         <SelectTrigger className={`col-span-3`} id={memberId}>
           <SelectValue placeholder="Select Member" />
         </SelectTrigger>
         <SelectContent>
+          <div className="p-2">
+            <input
+              placeholder="Search Members"
+              className="p-2 w-full"
+              type="text"
+              onChange={handleSearchChange}
+              value={search}
+            />
+          </div>
           {loading ? (
             <div>Loading...</div>
+          ) : members.length === 0 ? (
+            <div className="text-sm opacity-80 p-1">No options available</div>
           ) : (
             members.map((member) => (
               <SelectItem

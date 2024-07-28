@@ -38,6 +38,8 @@ const SelectPrograms: React.FC<SelectProgramProps> = ({
         <SelectContent>
           {programLoading ? (
             <div>Loading...</div>
+          ) : programs.length === 0 ? (
+            <div className="text-sm opacity-80 p-1">No options available</div>
           ) : (
             programs.map((prog: ProgramsOptions) => (
               <SelectItem key={prog.id} value={prog.id}>
