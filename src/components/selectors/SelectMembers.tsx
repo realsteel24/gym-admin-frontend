@@ -89,35 +89,56 @@ const SelectMember: React.FC<SelectMemberProps> = ({
       <Select
         onValueChange={(value) => {
           setMemberId(value);
-          setSearchParams("");
         }}
+        onOpenChange={() => setSearchParams("")}
       >
         <SelectTrigger className={`col-span-3`} id={memberId}>
           <SelectValue placeholder="Select Member" />
         </SelectTrigger>
         <SelectContent>
-          <div className="p-2">
-            <input
-              placeholder="Search Members"
-              className="p-2 w-full"
-              type="text"
-              onChange={handleSearchChange}
-              value={search}
-            />
-          </div>
           {loading ? (
-            <div>Loading...</div>
+            <div>
+              <input
+                placeholder="Search Members"
+                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
+                type="text"
+                onChange={handleSearchChange}
+                value={search}
+              />
+
+              <div className="text-sm opacity-80 p-1">Loading ..</div>
+            </div>
           ) : members.length === 0 ? (
-            <div className="text-sm opacity-80 p-1">No options available</div>
+            <div>
+              <input
+                placeholder="Search Members"
+                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
+                type="text"
+                onChange={handleSearchChange}
+                value={search}
+              />
+
+              <div className="text-sm opacity-80 p-1">No options available</div>
+            </div>
           ) : (
-            members.map((member) => (
-              <SelectItem
-                value={member.Members[0].id}
-                key={member.Members[0].id}
-              >
-                {member.name}
-              </SelectItem>
-            ))
+            <div className="col-span-3">
+              <input
+                placeholder="Search Members"
+                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
+                type="text"
+                onChange={handleSearchChange}
+                value={search}
+              />
+              {members.map((member) => (
+                <SelectItem
+                  value={member.Members[0].id}
+                  key={member.Members[0].id}
+                  onClick={() => null}
+                >
+                  {member.name}
+                </SelectItem>
+              ))}
+            </div>
           )}
         </SelectContent>
       </Select>
