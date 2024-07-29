@@ -103,7 +103,9 @@ const SelectMember: React.FC<SelectMemberProps> = ({ gymId, setMemberId }) => {
             className="col-span-3 justify-between p-3 font-normal"
           >
             {selectedStatus ? (
-              <>{selectedStatus.name}</>
+              <>
+                {selectedStatus.name} <CaretSortIcon opacity={"50%"} />
+              </>
             ) : (
               <>
                 Select Member
@@ -112,7 +114,7 @@ const SelectMember: React.FC<SelectMemberProps> = ({ gymId, setMemberId }) => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="col-span-3 p-0" align="start">
+        <PopoverContent className="col-span-3 p-0 z-50" align="start">
           <Command>
             <CommandInput
               placeholder="Search members..."
