@@ -68,7 +68,7 @@ export const CreateMemberFee = () => {
 
       toast({
         title: `Payment of recorded successfully`,
-        description: "Amount: ${selectedAmount}",
+        description: `Amount: ${selectedAmount}`,
       });
       clear();
       navigate(`/gym/${gymId}/menu`);
