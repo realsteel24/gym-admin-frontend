@@ -28,6 +28,7 @@ import {
   useMemberFees,
   usePayments,
   useStatusCount,
+  useTransactionCharts,
   useTransactionHistory,
 } from "@/hooks";
 import { useParams } from "react-router-dom";
@@ -45,6 +46,10 @@ export function Dashboard() {
       rowsPerPage: 10,
       page: 1,
     });
+
+  const { transactionCharts, transactionChartsLoading } = useTransactionCharts({
+    gymId: gymId!,
+  });
   const { memberFees, memberFeesLoading } = useMemberFees({
     gymId: gymId!,
     memberId: "all",
@@ -279,12 +284,9 @@ export function Dashboard() {
           </div>
 
           <div className="col-span-1 md:col-span-2">
-            <CardHeader>
-              <CardTitle>Month-wise Collection</CardTitle>
-            </CardHeader>
-            <MonthlyCollection
-              memberFees={transactionHistory}
-              memberFeesLoading={transactionHistoryLoading}
+            <MoneyGraph
+              memberFees={transactionCharts}
+              memberFeesLoading={transactionChartsLoading}
             />
           </div>
 
@@ -364,8 +366,8 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
-          <MoneyGraph />
         </div>
+       
       </main>
     </div>
   );

@@ -348,7 +348,6 @@ export const useMemberFees = ({
         }
         const result = await response.json();
         setMemberFees(result.memberFees);
-        console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
       } finally {
@@ -398,7 +397,6 @@ export const useTransactionHistory = ({
         const result = await response.json();
         setTransactionHistory(result.data);
         setDataCount(result.dataCount);
-        console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
       } finally {
@@ -413,6 +411,42 @@ export const useTransactionHistory = ({
     transactionHistory,
     transactionHistoryLoading,
     dataCount,
+  };
+};
+export const useTransactionCharts = ({ gymId }: { gymId: string }) => {
+  const [transactionChartsLoading, setTransactionChartsLoading] =
+    useState(true);
+  const [transactionCharts, setTransactionCharts] = useState<
+    MemberFeeOptions[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTransactionHistory = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/api/v1/admin/${gymId}/transactionHistory/charts`,
+          {
+            headers: { authorization: localStorage.getItem("token") ?? "" },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const result = await response.json();
+        setTransactionCharts(result.data);
+      } catch (error) {
+        console.error("Error fetching batches:", error);
+      } finally {
+        setTransactionChartsLoading(false);
+      }
+    };
+
+    fetchTransactionHistory();
+  }, [gymId]);
+
+  return {
+    transactionCharts,
+    transactionChartsLoading,
   };
 };
 
@@ -434,7 +468,6 @@ export const usePayments = ({ gymId }: { gymId: string }) => {
         }
         const result = await response.json();
         setPayments(result.amount);
-        console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
       } finally {

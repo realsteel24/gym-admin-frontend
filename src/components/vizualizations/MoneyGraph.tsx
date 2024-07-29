@@ -1,10 +1,8 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
+import { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -14,43 +12,101 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "July", desktop: 214, mobile: 140 },
-  { month: "August", desktop: 214, mobile: 140 },
-  { month: "September", desktop: 214, mobile: 140 },
-  { month: "October", desktop: 214, mobile: 140 },
-  { month: "November", desktop: 214, mobile: 140 },
-  { month: "December", desktop: 214, mobile: 140 },
-];
+import { MemberFeeOptions } from "@/hooks";
+import { TrendingUp } from "lucide-react";
+
+interface ChartDataItem {
+  month: string;
+  [key: string]: number | string;
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  colletion: {
+    label: "collection",
     color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-export function MoneyGraph() {
+export function MoneyGraph({
+  memberFeesLoading,
+  memberFees,
+}: {
+  memberFeesLoading: boolean;
+  memberFees: MemberFeeOptions[];
+}) {
+  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
+  const [programs, setPrograms] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!memberFeesLoading) {
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sept",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const currentYear = new Date().getFullYear();
+      const paymentsByMonthAndProgram: {
+        [month: string]: { [program: string]: number };
+      } = {};
+      const uniquePrograms: Set<string> = new Set();
+
+      months.forEach((month) => {
+        paymentsByMonthAndProgram[month] = {};
+      });
+
+      memberFees.forEach((fee) => {
+        const date = new Date(fee.paidDate);
+        if (date.getFullYear() === currentYear) {
+          const monthName = months[date.getMonth()];
+          const programName = fee.Member.MemberPrograms[0]?.Program?.name;
+          //@ts-ignore
+          uniquePrograms.add(programName);
+          //@ts-ignore
+          if (!paymentsByMonthAndProgram[monthName][programName]) {
+            //@ts-ignore
+            paymentsByMonthAndProgram[monthName][programName] = 0;
+          }
+          //@ts-ignore
+          paymentsByMonthAndProgram[monthName][programName] += Number(
+            fee.Payments[0].amount
+          );
+        }
+      });
+
+      const formattedData = months.map((month) => {
+        const monthData: ChartDataItem = { month };
+        Object.keys(paymentsByMonthAndProgram[month]).forEach((program) => {
+          monthData[program] = paymentsByMonthAndProgram[month][program];
+        });
+        return monthData;
+      });
+
+      setChartData(formattedData);
+      setPrograms(Array.from(uniquePrograms));
+    }
+  }, [memberFeesLoading, memberFees]);
+
   return (
-    <Card className="col-span-1 md:col-span-2">
+    <div className="col-span-1 md:col-span-2">
       <CardHeader>
-        <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Monthly Collection</CardTitle>
+        <CardDescription>
+          For the year - {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -63,31 +119,27 @@ export function MoneyGraph() {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
             />
+            <YAxis tickLine={false} axisLine={false} tickMargin={10} />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="desktop"
-              stackId="a"
-              fill="var(--color-desktop)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="mobile"
-              stackId="a"
-              fill="var(--color-mobile)"
-              radius={[4, 4, 0, 0]}
-            />
+            {programs.map((program, index) => (
+              <Bar
+                key={program}
+                dataKey={program}
+                stackId="a"
+                fill={`hsl(var(--chart-${index + 1}))`}
+              />
+            ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+        <div className="flex gap-2 font-medium leading-none text-muted-foreground">
+          Showing total collections for the current year
+          <TrendingUp className="h-4 w-4 text-secondary-foreground" />
         </div>
       </CardFooter>
-    </Card>
+    </div>
   );
 }
