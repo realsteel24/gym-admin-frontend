@@ -3,18 +3,38 @@ import { Skeleton } from "@/components/Skeleton";
 import { useTransactionHistory } from "@/hooks";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { TransactionHistoryColumn } from "./columns/TransactionHistoryColumn";
+import { useState } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationEllipsis,
+  PaginationNext,
+} from "@/components/ui/pagination";
 
 export const TransactionHistory = () => {
   const { gymId, memberId } = useParams<{ gymId: string; memberId: string }>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
-  const { transactionHistoryLoading, transactionHistory } =
+  const { transactionHistoryLoading, transactionHistory, dataCount } =
     useTransactionHistory({
       gymId: gymId!,
       memberId: memberId ?? "all",
+      page: currentPage,
+      rowsPerPage: rowsPerPage,
     });
+  const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
   const columns = TransactionHistoryColumn();
+  const totalPages = Math.ceil(dataCount / rowsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -51,6 +71,57 @@ export const TransactionHistory = () => {
             />
           </div>
         )}
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+                onClick={() => {
+                  handlePageChange(currentPage - 1);
+                }}
+              />
+            </PaginationItem>
+
+            {show === true
+              ? [...Array(totalPages).keys()].map((page) => (
+                  <PaginationItem key={page + 1}>
+                    <PaginationLink
+                      className={
+                        currentPage === page + 1
+                          ? "active cursor-pointer"
+                          : "cursor-pointer"
+                      }
+                      onClick={() => handlePageChange(page + 1)}
+                    >
+                      {page + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))
+              : null}
+            <PaginationItem>
+              <PaginationEllipsis
+                className={totalPages > 5 ? "visible" : "hidden"}
+                onClick={() => setShow(!show)}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+                onClick={() => {
+                  handlePageChange(currentPage + 1);
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

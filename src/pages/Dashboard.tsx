@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
 import { MonthlyCollection } from "@/components/vizualizations/MonthlyCollection";
 import GenderPieChart from "@/components/vizualizations/GenderPieChart";
+import { MoneyGraph } from "@/components/vizualizations/MoneyGraph";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
@@ -41,14 +42,22 @@ export function Dashboard() {
     useTransactionHistory({
       gymId: gymId!,
       memberId: "all",
+      rowsPerPage: 10,
+      page: 1,
     });
   const { memberFees, memberFeesLoading } = useMemberFees({
     gymId: gymId!,
     memberId: "all",
   });
   const { payments, paymentsLoading } = usePayments({ gymId: gymId! });
-  const { statusCount, statusCountLoading, newAdCount, newAdCountLoading } =
-    useStatusCount({ gymId: gymId! });
+  const {
+    statusCount,
+    statusCountLoading,
+    newAdCount,
+    newAdCountLoading,
+    maleCount,
+    femaleCount,
+  } = useStatusCount({ gymId: gymId! });
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -266,7 +275,7 @@ export function Dashboard() {
             <CardHeader>
               <CardTitle>Gender Diversity</CardTitle>
             </CardHeader>
-            <GenderPieChart memberFees={transactionHistory} />
+            <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />
           </div>
 
           <div className="col-span-1 md:col-span-2">
@@ -355,6 +364,7 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
+          <MoneyGraph />
         </div>
       </main>
     </div>

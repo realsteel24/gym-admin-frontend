@@ -107,7 +107,7 @@ export interface MemberFeeOptions {
   FeeCategory: { description: true; frequency: true };
   Payments: { 0: { amount: true; paymentMethod: true } };
   Member: {
-    User: { name: string; contact: string; gender: string };
+    User: { name: string; contact: string };
     MemberPrograms: {
       0: {
         Batch: { name: true };
@@ -368,12 +368,17 @@ export const useMemberFees = ({
 export const useTransactionHistory = ({
   gymId,
   memberId,
+  page,
+  rowsPerPage,
 }: {
   gymId: string;
   memberId?: string;
+  page: number;
+  rowsPerPage: number;
 }) => {
   const [transactionHistoryLoading, setTransactionHistoryLoading] =
     useState(true);
+  const [dataCount, setDataCount] = useState(0);
   const [transactionHistory, setTransactionHistory] = useState<
     MemberFeeOptions[]
   >([]);
@@ -382,7 +387,7 @@ export const useTransactionHistory = ({
     const fetchTransactionHistory = async () => {
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/${gymId}/transactionHistory/${memberId}`,
+          `${BACKEND_URL}/api/v1/admin/${gymId}/transactionHistory/${memberId}?page=${page}&rowsPerPage=${rowsPerPage}`,
           {
             headers: { authorization: localStorage.getItem("token") ?? "" },
           }
@@ -391,7 +396,8 @@ export const useTransactionHistory = ({
           throw new Error("Something went wrong");
         }
         const result = await response.json();
-        setTransactionHistory(result.memberFees);
+        setTransactionHistory(result.data);
+        setDataCount(result.dataCount);
         console.log(result);
       } catch (error) {
         console.error("Error fetching batches:", error);
@@ -401,11 +407,12 @@ export const useTransactionHistory = ({
     };
 
     fetchTransactionHistory();
-  }, [gymId, memberId]);
+  }, [gymId, memberId, page, rowsPerPage]);
 
   return {
     transactionHistory,
     transactionHistoryLoading,
+    dataCount,
   };
 };
 
@@ -448,6 +455,8 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
   const [newAdCountLoading, setNewAdCountLoading] = useState(true);
   const [statusCount, setStatusCount] = useState(0);
   const [newAdCount, setNewAdCount] = useState(0);
+  const [maleCount, setMaleCount] = useState(0);
+  const [femaleCount, setFemaleCount] = useState(0);
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -464,9 +473,11 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
         const result = await response.json();
         setStatusCount(result.defaultersCount.status);
         setNewAdCount(result.newAdCount.feeCategoryId);
+        setMaleCount(result.genderCount[1].count);
+        setFemaleCount(result.genderCount[0].count);
         console.log(result);
       } catch (error) {
-        console.error("Error fetching batches:", error);
+        console.error("Error fetching count:", error);
       } finally {
         setStatusCountLoading(false);
         setNewAdCountLoading(false);
@@ -481,6 +492,8 @@ export const useStatusCount = ({ gymId }: { gymId: string }) => {
     newAdCount,
     statusCountLoading,
     newAdCountLoading,
+    maleCount,
+    femaleCount,
   };
 };
 
