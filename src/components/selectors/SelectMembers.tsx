@@ -92,7 +92,7 @@ const SelectMember: React.FC<SelectMemberProps> = ({ gymId, setMemberId }) => {
   };
 
   return (
-    <div className="grid grid-cols-4 items-center gap-4 pt-2">
+    <div className="grid grid-cols-4 items-center gap-4 py-2">
       <Label htmlFor="members" className="text-right">
         Member
       </Label>
