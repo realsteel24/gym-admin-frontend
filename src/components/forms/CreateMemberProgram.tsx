@@ -83,7 +83,6 @@ export const CreateMemberProgram = () => {
             <SelectMember
               gymId={gymId!}
               id="members"
-              memberId={memberId}
               setMemberId={setMemberId}
             />
 

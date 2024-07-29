@@ -1,35 +1,36 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import React, { useState, useCallback, useEffect } from "react";
 import { debounce } from "lodash";
 import { MemberOptions } from "@/hooks";
 import { BACKEND_URL } from "@/config";
 import { useSearchParams } from "react-router-dom";
 import { Label } from "../ui/label";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 interface SelectMemberProps {
   gymId: string;
-
-  id: string;
-  memberId: string;
   setMemberId: (memberId: string) => void;
+  id: string;
 }
 
-const SelectMember: React.FC<SelectMemberProps> = ({
-  gymId,
-  memberId,
-  setMemberId,
-}) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [search, setSearch] = useState<string>("");
-
-  const [members, setMembers] = useState<MemberOptions[]>([]);
+const SelectMember: React.FC<SelectMemberProps> = ({ gymId, setMemberId }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [memberSearch, setMemberSearch] = useState<MemberOptions[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<MemberOptions | null>(
+    null
+  );
+  const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
 
   const fetchMembers = async (search: string) => {
     setLoading(true);
@@ -52,13 +53,13 @@ const SelectMember: React.FC<SelectMemberProps> = ({
       const data = await response.json();
 
       if (data.data) {
-        setMembers(data.data);
+        setMemberSearch(data.data);
       } else {
         throw new Error("Invalid response structure");
       }
     } catch (error) {
       console.error("Error fetching members:", error);
-      setMembers([]);
+      setMemberSearch([]);
     } finally {
       setLoading(false);
     }
@@ -73,75 +74,74 @@ const SelectMember: React.FC<SelectMemberProps> = ({
 
   useEffect(() => {
     const search = searchParams.get("search") || "";
+    setSearch(search);
     debouncedFetchMembers(search);
-  }, [search, debouncedFetchMembers]);
+  }, [searchParams, debouncedFetchMembers]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setSearchParams({ search: e.target.value });
+  const handleInputChange = (newValue: string) => {
+    setSearchParams({ search: newValue });
+    setSearch(newValue);
+    debouncedFetchMembers(newValue);
+  };
+
+  const handleMemberSelect = (member: MemberOptions) => {
+    setSelectedStatus(member);
+    setMemberId(member.Members[0].id);
+    setSearchParams("");
+    setOpen(false);
   };
 
   return (
-    <div className="grid grid-cols-4 items-center gap-4 py-2">
+    <div className="grid grid-cols-4 items-center gap-4 pt-2">
       <Label htmlFor="members" className="text-right">
         Member
       </Label>
-      <Select
-        onValueChange={(value) => {
-          setMemberId(value);
-        }}
-        onOpenChange={() => setSearchParams("")}
-      >
-        <SelectTrigger className={`col-span-3`} id={memberId}>
-          <SelectValue placeholder="Select Member" />
-        </SelectTrigger>
-        <SelectContent>
-          {loading ? (
-            <div>
-              <input
-                placeholder="Search Members"
-                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
-                type="text"
-                onChange={handleSearchChange}
-                value={search}
-              />
-
-              <div className="text-sm opacity-80 p-1">Loading ..</div>
-            </div>
-          ) : members.length === 0 ? (
-            <div>
-              <input
-                placeholder="Search Members"
-                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
-                type="text"
-                onChange={handleSearchChange}
-                value={search}
-              />
-
-              <div className="text-sm opacity-80 p-1">No options available</div>
-            </div>
-          ) : (
-            <div className="col-span-3">
-              <input
-                placeholder="Search Members"
-                className="text-sm p-1 bg-gray-200 dark:bg-muted w-full"
-                type="text"
-                onChange={handleSearchChange}
-                value={search}
-              />
-              {members.map((member) => (
-                <SelectItem
-                  value={member.Members[0].id}
-                  key={member.Members[0].id}
-                  onClick={() => null}
-                >
-                  {member.name}
-                </SelectItem>
-              ))}
-            </div>
-          )}
-        </SelectContent>
-      </Select>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="col-span-3 justify-between p-3 font-normal"
+          >
+            {selectedStatus ? (
+              <>{selectedStatus.name}</>
+            ) : (
+              <>
+                Select Member
+                <CaretSortIcon opacity={"50%"} />
+              </>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="col-span-3 p-0" align="start">
+          <Command>
+            <CommandInput
+              placeholder="Search members..."
+              value={search}
+              onChangeCapture={(e) => handleInputChange(e.currentTarget.value)}
+            />
+            <CommandList>
+              {loading ? (
+                <div className="p-2">Loading...</div>
+              ) : (
+                <>
+                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandGroup>
+                    {memberSearch.map((member) => (
+                      <CommandItem
+                        key={member.Members[0].id}
+                        value={member.name}
+                        onSelect={() => handleMemberSelect(member)}
+                      >
+                        {member.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };

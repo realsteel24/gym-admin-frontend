@@ -67,8 +67,8 @@ export const CreateMemberFee = () => {
       }
 
       toast({
-        title: `Payment of ${selectedAmount} recorded successfully`,
-        description: "Success",
+        title: `Payment of recorded successfully`,
+        description: "Amount: ${selectedAmount}",
       });
       clear();
       navigate(`/gym/${gymId}/menu`);
@@ -97,7 +97,6 @@ export const CreateMemberFee = () => {
             <SelectMember
               gymId={gymId!}
               id="members"
-              memberId={memberId}
               setMemberId={setMemberId}
             />
             <SelectPackage
