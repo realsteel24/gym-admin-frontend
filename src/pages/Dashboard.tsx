@@ -33,7 +33,6 @@ import {
 } from "@/hooks";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
-import { MonthlyCollection } from "@/components/vizualizations/MonthlyCollection";
 import GenderPieChart from "@/components/vizualizations/GenderPieChart";
 import { MoneyGraph } from "@/components/vizualizations/MoneyGraph";
 
@@ -367,7 +366,6 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
-       
       </main>
     </div>
   );
