@@ -47,7 +47,7 @@ const chartConfig = {
 
 export function MoneyGraph() {
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-1 md:col-span-2">
       <CardHeader>
         <CardTitle>Bar Chart - Stacked + Legend</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
