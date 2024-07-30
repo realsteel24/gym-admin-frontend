@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
-  ChartLegendContent,
+    ChartLegendContent,
 } from "@/components/ui/chart";
 import { MemberFeeOptions } from "@/hooks";
 import { TrendingUp } from "lucide-react";
@@ -101,7 +101,7 @@ export function MoneyGraph({
   }, [memberFeesLoading, memberFees]);
 
   return (
-    <div className="col-span-1 md:col-span-2">
+    <>
       <CardHeader>
         <CardTitle>Monthly Collection</CardTitle>
         <CardDescription>
@@ -129,17 +129,18 @@ export function MoneyGraph({
                 dataKey={program}
                 stackId="a"
                 fill={`hsl(var(--chart-${index + 1}))`}
+                accumulate="sum"
               />
             ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none text-muted-foreground">
+        <div className="flex gap-2 font-medium leading-none text-muted-foreground opacity-80">
           Showing total collections for the current year
           <TrendingUp className="h-4 w-4 text-secondary-foreground" />
         </div>
       </CardFooter>
-    </div>
+    </>
   );
 }

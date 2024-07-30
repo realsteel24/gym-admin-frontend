@@ -35,6 +35,7 @@ import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
 import GenderPieChart from "@/components/vizualizations/GenderPieChart";
 import { MoneyGraph } from "@/components/vizualizations/MoneyGraph";
+import { MonthlyCollection } from "@/components/vizualizations/MonthlyCollection";
 
 export function Dashboard() {
   const { gymId } = useParams<{ gymId: string }>();
@@ -282,18 +283,22 @@ export function Dashboard() {
             <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />
           </div>
 
-          <div className="col-span-1 md:col-span-2">
-            <MoneyGraph
+          <Card className="col-span-1 md:col-span-2">
+            <CardHeader>
+              <CardTitle>Monthwise Collection Graph</CardTitle>
+              <CardDescription>Total Sales</CardDescription>
+            </CardHeader>
+            <MonthlyCollection
               memberFees={transactionCharts}
               memberFeesLoading={transactionChartsLoading}
             />
-          </div>
+          </Card>
 
           <Card className="md:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-4">
                 <CardTitle>Membership status</CardTitle>
-                <CardDescription>Defaulters list</CardDescription>
+                <CardDescription>Subscriptions</CardDescription>
               </div>
               <Button asChild size="sm" className="ml-auto gap-1">
                 <Link to={`/gym/${gymId}/memberFees/all`}>
@@ -365,6 +370,12 @@ export function Dashboard() {
               )}
             </CardContent>
           </Card>
+          <div className="col-span-1 md:col-span-2">
+            <MoneyGraph
+              memberFees={transactionCharts}
+              memberFeesLoading={transactionChartsLoading}
+            />
+          </div>
         </div>
       </main>
     </div>

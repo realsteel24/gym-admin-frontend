@@ -4,13 +4,17 @@ import { usePrograms } from "@/hooks";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ProgramColumns } from "./columns/ProgramColumns";
 import { useEffect } from "react";
+import { useGymNameContext } from "@/context/Gym";
 
 export const Programs = () => {
   const { gymId } = useParams<{ gymId: string }>();
   const { programLoading, programs, fetchPrograms } = usePrograms({
     gymId: gymId!,
   });
+  const { gymName, loading } = useGymNameContext();
+
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchPrograms();
   }, [gymId]);
@@ -33,7 +37,7 @@ export const Programs = () => {
         />
       </svg>
       <div className="flex justify-center text-xl my-6 underline underline-offset-8 decoration-4 decoration-accent font-semibold">
-        Mohan's Planet, Head Quarters
+        {loading ? "loading.." : gymName}
       </div>
 
       {programLoading ? (
