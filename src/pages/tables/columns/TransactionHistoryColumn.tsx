@@ -20,7 +20,7 @@ export const TransactionHistoryColumn = (): ColumnDef<MemberFeeOptions>[] => [
     },
   },
   {
-    accessorKey: "Payments",
+    accessorKey: "paymentMethod",
     header: "Payment Method",
     cell: ({ row }: { row: { original: MemberFeeOptions } }) => {
       const method = row.original.Payments?.[0]?.paymentMethod ?? "N/A";

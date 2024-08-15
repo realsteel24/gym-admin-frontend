@@ -88,6 +88,8 @@ export const CreateFeeCategory = () => {
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Create Fee Package"
         FormDescription=" Please add all the necessary fields and click save"
+        drawerTitle="Create Fee Package"
+        drawerDescription=" Please add all the necessary fields and click save"
         titleButton="Create Fee Package"
         children={
           <div>

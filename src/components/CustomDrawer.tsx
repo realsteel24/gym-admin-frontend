@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,42 +19,33 @@ import {
 } from "@/components/ui/drawer";
 import { useState } from "react";
 
-import React from "react";
+interface DrawerProps {
+  buttonTitle: string;
+  drawerTitle: string;
+  drawerDescription: string;
+  children: React.ReactNode;
+  type?: "list" | "card";
+}
 
-export const CustomDialogForm = ({
-  FormTitle,
-  FormDescription,
+export const CustomDrawer = ({
+  buttonTitle,
   drawerTitle,
   drawerDescription,
   children,
-  button,
-  titleButton,
-  isOpen,
-  setIsOpen,
-  fn,
-}: {
-  drawerTitle?: string;
-  drawerDescription?: string;
-  FormTitle: string;
-  FormDescription: string;
-  children: React.ReactNode;
-  button: React.ReactNode;
-  titleButton: string;
-  isOpen: boolean;
-  fn?: () => void;
-  setIsOpen: () => void;
-}) => {
+  type,
+}: DrawerProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(false);
 
   return (
     <>
       {/* Drawer for mobile */}
-      <div className="block md:hidden ">
+      <div className="block md:hidden">
         <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
           <DrawerTrigger asChild>
-            <Button variant="outline">{titleButton}</Button>
+            <Button variant="outline">{buttonTitle}</Button>
           </DrawerTrigger>
-          <DrawerContent className="px-4">
+          <DrawerContent>
             <DrawerHeader className="text-left">
               <DrawerTitle>{drawerTitle}</DrawerTitle>
               <DrawerDescription>{drawerDescription}</DrawerDescription>
@@ -69,21 +59,19 @@ export const CustomDialogForm = ({
           </DrawerContent>
         </Drawer>
       </div>
+
       {/* Dialog for desktop */}
       <div className="hidden md:block">
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={desktopOpen} onOpenChange={setDesktopOpen}>
           <DialogTrigger asChild>
-            <Button onClick={fn} variant={"outline"}>
-              {titleButton}
-            </Button>
+            <Button variant="outline">{buttonTitle}</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className={type === "list" ? "" : "sm:max-w-[425px]"}>
             <DialogHeader>
-              <DialogTitle>{FormTitle}</DialogTitle>
-              <DialogDescription>{FormDescription} </DialogDescription>
+              <DialogTitle>{drawerTitle}</DialogTitle>
+              <DialogDescription>{drawerDescription}</DialogDescription>
             </DialogHeader>
             {children}
-            <DialogFooter>{button}</DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

@@ -78,6 +78,8 @@ export const CreateMemberProgram = () => {
         FormTitle="Add Member to Program"
         FormDescription="Please add all the necessary fields and click save"
         titleButton="Add Member"
+        drawerTitle="Add Member to Program"
+        drawerDescription="Please add all the necessary fields and click save"
         children={
           <div>
             <SelectMember

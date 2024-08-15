@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DarkModeToggle from "./DarkModeToggle";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface AppbarProps {
   // TODO: can u figure out what the type should be here?
@@ -7,9 +8,15 @@ interface AppbarProps {
 }
 
 export const Appbar = ({ children }: AppbarProps) => {
+  const navigate = useNavigate();
+  const { gymId } = useParams<{ gymId: string }>();
+
   return (
     <div className="flex justify-between px-4 dark:bg-black backdrop-filter backdrop-blur-3xl">
-      <div className="text-lg flex flex-col justify-center font-bold">
+      <div
+        className="text-lg flex flex-col justify-center font-bold"
+        onClick={() => navigate(`/gym/${gymId}/dashboard`)}
+      >
         Admin App
       </div>
       <div className="flex my-4">

@@ -73,6 +73,8 @@ export const CreateBatch: React.FC = () => {
         }}
         FormTitle="Create a Batch"
         FormDescription=" Please add all the necessary fields and click save"
+        drawerTitle="Create a Batch"
+        drawerDescription=" Please add all the necessary fields and click save"
         titleButton="Create Batch"
         children={
           <div>

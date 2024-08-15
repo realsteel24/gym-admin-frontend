@@ -37,29 +37,30 @@ function App() {
                     path="dashboard"
                     element={<Layout children={<Dashboard />} />}
                   />
-                  <Route
-                    path="batches/:id"
-                    element={<Layout children={<Batches />} />}
-                  />
-                  <Route
-                    path="feeCategories"
-                    element={<Layout children={<FeeCategories />} />}
-                  />
-                  <Route
-                    path="members/:id"
-                    element={<Layout children={<Members />} />}
-                  />
-                  <Route
-                    path="memberFees/:memberId"
-                    element={<Layout children={<MemberFees />} />}
-                  />
-                  <Route
-                    path="transactionHistory/:memberId"
-                    element={<Layout children={<TransactionHistory />} />}
-                  />
                 </Routes>
               </GymNameProvider>
             }
+          />
+          
+          <Route
+            path="/gym/:gymId/batches/:id"
+            element={<Layout children={<Batches />} />}
+          />
+          <Route
+            path="/gym/:gymId/feeCategories"
+            element={<Layout children={<FeeCategories />} />}
+          />
+          <Route
+            path="/gym/:gymId/members/:id"
+            element={<Layout children={<Members />} />}
+          />
+          <Route
+            path="/gym/:gymId/memberFees/:memberId"
+            element={<Layout children={<MemberFees />} />}
+          />
+          <Route
+            path="/gym/:gymId/transactionHistory/:memberId"
+            element={<Layout children={<TransactionHistory />} />}
           />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/payment" element={<Batches />} />

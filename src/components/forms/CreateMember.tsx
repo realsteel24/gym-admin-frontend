@@ -70,6 +70,8 @@ export const CreateMember = () => {
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Add new Member"
         FormDescription=" Please add all the necessary fields and click save"
+        drawerTitle="Add new Member"
+        drawerDescription=" Please add all the necessary fields and click save"
         titleButton="Create Member"
         children={
           <div>

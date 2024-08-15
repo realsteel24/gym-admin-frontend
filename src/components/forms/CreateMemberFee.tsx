@@ -91,6 +91,8 @@ export const CreateMemberFee = () => {
         }}
         FormTitle="Record a Payment"
         FormDescription="Please add all the necessary fields and click save"
+        drawerTitle="Record a Payment"
+        drawerDescription="Please add all the necessary fields and click save"
         titleButton="Add transaction"
         children={
           <div>

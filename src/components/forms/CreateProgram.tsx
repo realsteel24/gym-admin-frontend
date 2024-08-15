@@ -68,6 +68,8 @@ export const CreateProgram = () => {
         setIsOpen={() => setIsDialogOpen(!isDialogOpen)}
         FormTitle="Create a Program"
         FormDescription=" Please add all the necessary fields and click save"
+        drawerTitle="Create a Program"
+        drawerDescription=" Please add all the necessary fields and click save"
         titleButton="Create Program"
         children={
           <div>
